@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký Cửa Hàng</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body,
+        html {
+            height: 100%;
+            margin: 0;
+        }
+
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+                url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320">\
+                <path fill="%23007bff" fill-opacity="0.2" d="M0,192L48,208C96,224,192,256,288,250.7C384,245,480,203,576,181.3C672,160,768,160,864,176C960,192,1056,224,1152,229.3C1248,235,1344,213,1392,202.7L1440,192L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path>\
+                </svg>');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+            animation: moveBackground 20s ease infinite alternate;
+        }
+
+        @keyframes moveBackground {
+            0% {
+                background-position: left top;
+            }
+
+            100% {
+                background-position: right bottom;
+            }
+        }
+
+        .form-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(50, 50, 93, .2), 0 5px 15px rgba(0, 0, 0, .1);
+            padding: 40px;
+            width: 100%;
+            max-width: 800px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-header i {
+            margin-right: 15px;
+            color: #007bff;
+            font-size: 2.5rem;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control,
+        .form-select {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-3px);
+        }
+
+        .preview-image {
+            max-width: 200px;
+            max-height: 200px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                margin: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background-container"></div>
+
+    <div class="form-page container">
+        <div class="row justify-content-center w-100">
+            <div class="col-md-10 col-lg-8">
+                <div class="form-container">
+                    <h2 class="form-header">
+                        <i class="fas fa-store"></i>
+                        Đăng Ký Cửa Hàng
+                    </h2>
+                    <form id="shopRegistrationForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="shopName" class="form-label">
+                                    <i class="fas fa-tags"></i> Tên Cửa Hàng
+                                </label>
+                                <input type="text" class="form-control" id="shopName" name="shopName" required
+                                    placeholder="Nhập tên cửa hàng">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="shopOwnerId" class="form-label">
+                                    <i class="fas fa-user-tie"></i> Mã Chủ Cửa Hàng
+                                </label>
+                                <input type="number" class="form-control" id="shopOwnerId" name="shopOwnerID" required
+                                    placeholder="Nhập mã chủ cửa hàng" th:value="${id}" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="backgroundImage" class="form-label">
+                                <i class="fas fa-image"></i> Ảnh Nền Cửa Hàng
+                            </label>
+                            <input type="file" class="form-control" id="backgroundImage" name="backgroundImage"
+                                accept="image/*">
+                            <img id="imagePreview" class="preview-image" src="#" alt="Image Preview">
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="status" class="form-label">
+                                    <i class="fas fa-check-circle"></i> Trạng Thái
+                                </label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="">Chọn trạng thái</option>
+                                    <option value="active">Hoạt Động</option>
+                                    <option value="inactive">Không Hoạt Động</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="averageAssess" class="form-label">
+                                    <i class="fas fa-star"></i> Điểm Đánh Giá
+                                </label>
+                                <input type="number" class="form-control" id="averageAssess" name="averageAssess"
+                                    step="0.1" min="0" max="5" placeholder="Nhập điểm đánh giá" value="0" readonly>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-comment-dots"></i> Mô Tả Cửa Hàng
+                            </label>
+                            <textarea class="form-control" id="description" name="description" rows="3"
+                                placeholder="Nhập mô tả về cửa hàng"></textarea>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Đăng Ký Cửa Hàng
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('backgroundImage').addEventListener('change', function (event) {
+            const reader = new FileReader();
+            const previewImage = document.getElementById('imagePreview');
+
+            reader.onload = function (e) {
+                previewImage.src = e.target.result;
+                previewImage.style.display = 'block';
+            }
+
+            reader.readAsDataURL(event.target.files[0]);
+        });
+
+        document.getElementById('shopRegistrationForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const shopName = document.getElementById('shopName').value;
+            const status = document.getElementById('status').value;
+            const shopOwnerId = document.getElementById('shopOwnerId').value;
+
+            if (!shopName || !status || !shopOwnerId) {
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc');
+                return;
+            }
+
+            const formData = new FormData(this);
+
+            console.log('Form Data:', Object.fromEntries(formData));
+
+            fetch('/shopowner/create-shop', {
+                method: 'POST',
+                body: formData
+            }).then(response =>{
+                if (!response.ok) {
+                    throw new Error('Có lỗi xảy ra khi đăng ký cửa hàng!');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Response:', data);
+                window.location.href = '/shopowner/dashboard';
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+
+            alert('Đăng ký cửa hàng thành công!');
+        });
+    </script>
+</body>
+
+</html>

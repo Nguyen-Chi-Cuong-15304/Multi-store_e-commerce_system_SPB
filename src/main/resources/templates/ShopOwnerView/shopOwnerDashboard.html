@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Quản Lý Cửa Hàng</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            height: 100vh;
+            background-color: #343a40;
+            position: fixed;
+        }
+
+        .sidebar .nav-link {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .sidebar .nav-link:hover {
+            color: white;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .main-content {
+            margin-left: 225px;
+            padding: 20px;
+        }
+
+        .card {
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            border-left: 4px solid;
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card-primary {
+            border-left-color: #007bff;
+        }
+
+        .stat-card-success {
+            border-left-color: #28a745;
+        }
+
+        .stat-card-warning {
+            border-left-color: #ffc107;
+        }
+
+        .stat-card-danger {
+            border-left-color: #dc3545;
+        }
+
+        .chart-container {
+            height: 300px;
+        }
+
+        .table-responsive {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Sidebar -->
+    <div class="col-md-2 col-sm-12 sidebar p-0">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-white">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <span class="fs-4">Quản Lý Cửa Hàng</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="#" class="nav-link active" aria-current="page">
+                        <i class="fas fa-home me-2"></i>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/shopowner/productlist" class="nav-link">
+                        <i class="fas fa-box me-2"></i>
+                        Sản Phẩm
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-plus-circle me-2"></i>
+                        Thêm Sản Phẩm
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-shopping-cart me-2"></i>
+                        Đơn Hàng
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-users me-2"></i>
+                        Khách Hàng
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-crown me-2"></i>
+                        Khách Hàng VIP
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-chart-bar me-2"></i>
+                        Báo Cáo
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">
+                        <i class="fas fa-cog me-2"></i>
+                        Cài Đặt
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                    id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/api/placeholder/48/48" alt="Admin" width="32" height="32" class="rounded-circle me-2">
+                    <strong>Admin</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
+                    <li><a class="dropdown-item" href="#">Hồ sơ</a></li>
+                    <li><a class="dropdown-item" href="#">Cài đặt</a></li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container-fluid">
+            <div class="row mb-4">
+                <div class="col-md-12">
+                    <h2>Dashboard</h2>
+                    <p class="text-muted">Xin chào, Admin! Đây là tổng quan hoạt động cửa hàng của bạn.</p>
+                </div>
+            </div>
+
+            <!-- Statistics Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card stat-card-primary h-100 py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Doanh Thu
+                                        (Tháng)</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">40.500.000 đ</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card stat-card-success h-100 py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Đơn Hàng
+                                        (Tháng)</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">215</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-shopping-bag fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card stat-card-warning h-100 py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Khách Hàng
+                                        Mới</div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">48</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-users fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-4">
+                    <div class="card stat-card stat-card-danger h-100 py-2">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col mr-2">
+                                    <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Đơn Cần Xử Lý
+                                    </div>
+                                    <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                </div>
+                                <div class="col-auto">
+                                    <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row -->
+            <div class="row mb-4">
+                <div class="col-xl-8 col-lg-7">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Doanh Thu Theo Tháng</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink">
+                                    <div class="dropdown-header">Tùy chọn:</div>
+                                    <a class="dropdown-item" href="#">Xuất báo cáo</a>
+                                    <a class="dropdown-item" href="#">Chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4 col-lg-5">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Phân Loại Sản Phẩm</h6>
+                            <div class="dropdown no-arrow">
+                                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink2"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
+                                    aria-labelledby="dropdownMenuLink2">
+                                    <div class="dropdown-header">Tùy chọn:</div>
+                                    <a class="dropdown-item" href="#">Chi tiết</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chart-container">
+                                <canvas id="productCategoryChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Đơn Hàng Gần Đây</h6>
+                            <a href="#" class="btn btn-sm btn-primary shadow-sm">
+                                <i class="fas fa-download fa-sm text-white-50 me-1"></i>Xuất Báo Cáo
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover" id="recentOrdersTable" width="100%"
+                                    cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Đơn</th>
+                                            <th>Khách Hàng</th>
+                                            <th>Sản Phẩm</th>
+                                            <th>Giá Trị</th>
+                                            <th>Ngày Đặt</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Hành Động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#ORD-2023-001</td>
+                                            <td>Nguyễn Văn A</td>
+                                            <td>Điện thoại Samsung Galaxy S23</td>
+                                            <td>22.990.000 đ</td>
+                                            <td>23/03/2025</td>
+                                            <td><span class="badge bg-warning">Đang xử lý</span></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-primary"><i
+                                                            class="fas fa-eye"></i></button>
+                                                    <button class="btn btn-sm btn-success"><i
+                                                            class="fas fa-check"></i></button>
+                                                    <button class="btn btn-sm btn-danger"><i
+                                                            class="fas fa-times"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-2023-002</td>
+                                            <td>Trần Thị B</td>
+                                            <td>Laptop Dell XPS 13</td>
+                                            <td>35.990.000 đ</td>
+                                            <td>22/03/2025</td>
+                                            <td><span class="badge bg-success">Hoàn thành</span></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-primary"><i
+                                                            class="fas fa-eye"></i></button>
+                                                    <button class="btn btn-sm btn-secondary"><i
+                                                            class="fas fa-print"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-2023-003</td>
+                                            <td>Lê Văn C</td>
+                                            <td>Tai nghe Apple AirPods Pro</td>
+                                            <td>5.990.000 đ</td>
+                                            <td>21/03/2025</td>
+                                            <td><span class="badge bg-info">Đang giao</span></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-primary"><i
+                                                            class="fas fa-eye"></i></button>
+                                                    <button class="btn btn-sm btn-success"><i
+                                                            class="fas fa-truck"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-2023-004</td>
+                                            <td>Phạm Thị D</td>
+                                            <td>iPad Pro 12.9 inch</td>
+                                            <td>28.990.000 đ</td>
+                                            <td>20/03/2025</td>
+                                            <td><span class="badge bg-danger">Đã hủy</span></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-primary"><i
+                                                            class="fas fa-eye"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#ORD-2023-005</td>
+                                            <td>Hoàng Văn E</td>
+                                            <td>Macbook Air M2</td>
+                                            <td>29.990.000 đ</td>
+                                            <td>19/03/2025</td>
+                                            <td><span class="badge bg-success">Hoàn thành</span></td>
+                                            <td>
+                                                <div class="btn-group">
+                                                    <button class="btn btn-sm btn-primary"><i
+                                                            class="fas fa-eye"></i></button>
+                                                    <button class="btn btn-sm btn-secondary"><i
+                                                            class="fas fa-print"></i></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VIP Customers and Top Products -->
+            <div class="row">
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Khách Hàng VIP</h6>
+                            <a href="#" class="text-info">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Tên Khách Hàng</th>
+                                            <th>Email</th>
+                                            <th>Tổng Chi Tiêu</th>
+                                            <th>Cấp</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Nguyễn Văn A</td>
+                                            <td>nguyenvana@email.com</td>
+                                            <td>120.500.000 đ</td>
+                                            <td><span class="badge bg-warning text-dark">Vàng</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Trần Thị B</td>
+                                            <td>tranthib@email.com</td>
+                                            <td>98.750.000 đ</td>
+                                            <td><span class="badge bg-secondary">Bạc</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lê Văn C</td>
+                                            <td>levanc@email.com</td>
+                                            <td>205.900.000 đ</td>
+                                            <td><span class="badge bg-danger">Kim cương</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phạm Thị D</td>
+                                            <td>phamthid@email.com</td>
+                                            <td>85.300.000 đ</td>
+                                            <td><span class="badge bg-secondary">Bạc</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6 col-lg-6">
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                            <h6 class="m-0 font-weight-bold text-primary">Sản Phẩm Bán Chạy</h6>
+                            <a href="#" class="text-info">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Sản Phẩm</th>
+                                            <th>Đã Bán</th>
+                                            <th>Doanh Thu</th>
+                                            <th>Tồn Kho</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>iPhone 14 Pro Max</td>
+                                            <td>45</td>
+                                            <td>58.950.000 đ</td>
+                                            <td>12</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Samsung Galaxy S23 Ultra</td>
+                                            <td>38</td>
+                                            <td>45.600.000 đ</td>
+                                            <td>15</td>
+                                        </tr>
+                                        <tr>
+                                            <td>MacBook Pro M2</td>
+                                            <td>25</td>
+                                            <td>87.500.000 đ</td>
+                                            <td>8</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Apple Watch Series 8</td>
+                                            <td>52</td>
+                                            <td>31.200.000 đ</td>
+                                            <td>22</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script>
+        // Revenue Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+                datasets: [{
+                    label: 'Doanh Thu (triệu đồng)',
+                    data: [25, 30, 28, 35, 40, 38, 45, 47, 42, 50, 55, 58],
+                    backgroundColor: 'rgba(78, 115, 223, 0.05)',
+                    borderColor: 'rgba(78, 115, 223, 1)',
+                    pointRadius: 3,
+                    pointBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointBorderColor: 'rgba(78, 115, 223, 1)',
+                    pointHoverRadius: 5,
+                    pointHoverBackgroundColor: 'rgba(78, 115, 223, 1)',
+                    pointHoverBorderColor: 'rgba(78, 115, 223, 1)',
+                    pointHitRadius: 10,
+                    pointBorderWidth: 2,
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Product Categories Chart
+        const productCategoryCtx = document.getElementById('productCategoryChart').getContext('2d');
+        const productCategoryChart = new Chart(productCategoryCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Điện thoại', 'Laptop', 'Máy tính bảng', 'Phụ kiện', 'Đồng hồ thông minh'],
+                datasets: [{
+                    data: [35, 25, 15, 15, 10],
+                    backgroundColor: [
+                        '#4e73df',
+                        '#1cc88a',
+                        '#36b9cc',
+                        '#f6c23e',
+                        '#e74a3b'
+                    ],
+                    hoverBackgroundColor: [
+                        '#2e59d9',
+                        '#17a673',
+                        '#2c9faf',
+                        '#dda20a',
+                        '#be2617'
+                    ],
+                    hoverBorderColor: 'rgba(234, 236, 244, 1)',
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                cutout: '70%',
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

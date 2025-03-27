@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            /* Khoảng cách giữa các nút */
+            align-items: center;
+        }
+
+        .wishlist-btn {
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            color: #dc3545;
+            /* Màu đỏ cho trái tim */
+            cursor: pointer;
+        }
+
+        .wishlist-btn:hover {
+            color: #ff6b6b;
+            /* Màu sáng hơn khi hover */
+        }
+        .product-title {
+            color: #2c3e50; /* Xanh đậm nhạt */
+            font-weight: 700;
+        }
+        .product-description {
+            color: #7f8c8d; /* Xám nhạt */
+            font-size: 1.1rem;
+        }
+        .product-price {
+            color: #e74c3c; /* Đỏ cam */
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .wishlist-btn {
+            border: none;
+            background: none;
+            font-size: 1.5rem;
+            color: #dc3545; /* Đỏ */
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .wishlist-btn:hover {
+            color: #ff6b6b; /* Đỏ sáng khi hover */
+        }
+        .btn-primary {
+            background-color: #3498db; /* Xanh dương */
+            border-color: #3498db;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9; /* Xanh đậm hơn khi hover */
+        }
+        .btn-success {
+            background-color: #27ae60; /* Xanh lá */
+            border-color: #27ae60;
+        }
+        .btn-success:hover {
+            background-color: #219653; /* Xanh lá đậm hơn khi hover */
+        }
+        .icon-text {
+            margin-left: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <!-- Jumbotron -->
+        <div class="p-3 text-center bg-white border-bottom">
+            <div class="container">
+                <div class="row gy-3">
+                    <!-- Left elements -->
+                    <div class="col-lg-2 col-sm-4 col-4">
+                        <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
+                            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+                        </a>
+                    </div>
+                    <!-- Left elements -->
+
+                    <!-- Center elements -->
+                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
+                        <div class="d-flex float-end">
+                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
+                                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                                target="_blank"> <i class="fas fa-user-alt m-1 me-md-2"></i>
+                                <p class="d-none d-md-block mb-0">Sign in</p>
+                            </a>
+                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
+                                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
+                                target="_blank"> <i class="fas fa-heart m-1 me-md-2"></i>
+                                <p class="d-none d-md-block mb-0">Wishlist</p>
+                            </a>
+                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
+                                class="border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i
+                                    class="fas fa-shopping-cart m-1 me-md-2"></i>
+                                <p class="d-none d-md-block mb-0">My cart</p>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Center elements -->
+
+                    <!-- Right elements -->
+                    <div class="col-lg-5 col-md-12 col-12">
+                        <div class="input-group float-center">
+                            <div class="form-outline">
+                                <input type="search" id="form1" class="form-control" placeholder="Search product" />
+                                <!-- <label class="form-label" for="form1">Search</label> -->
+                            </div>
+                            <button type="button" class="btn btn-primary shadow-0">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Right elements -->
+                </div>
+            </div>
+        </div>
+        <!-- Jumbotron -->
+
+        <!-- Navbar -->
+
+        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white">
+            
+            <div class="container justify-content-center justify-content-md-between">
+                
+                <button class="navbar-toggler border py-2 text-dark" type="button" data-mdb-toggle="collapse"
+                    data-mdb-target="#navbarLeftAlignExample" aria-controls="navbarLeftAlignExample"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fas fa-bars"></i>
+                </button>
+
+                
+                <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
+                    
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" aria-current="page" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Categories</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Hot offers</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Gift boxes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Projects</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Menu item</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" href="#">Menu name</a>
+                        </li>
+                       
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button"
+                                data-mdb-toggle="dropdown" aria-expanded="false">
+                                Others
+                            </a>
+                           
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <a class="dropdown-item" href="#">Action</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider" />
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                </div>
+            </div>
+            
+        </nav> -->
+
+        <!-- Navbar -->
+        <!-- Jumbotron -->
+        <!-- <div class="bg-primary text-white py-5">
+            <div class="container py-5">
+                <h1>
+                    Best products & <br />
+                    brands in our store
+                </h1>
+                <p>
+                    Trendy Products, Factory Prices, Excellent Service
+                </p>
+                <button type="button" class="btn btn-outline-light">
+                    Learn more
+                </button>
+                <button type="button" class="btn btn-light shadow-0 text-primary pt-2 border border-white">
+                    <span class="pt-1">Purchase now</span>
+                </button>
+            </div>
+        </div> -->
+        <!-- Jumbotron -->
+    </header>
+    <div class="container mt-3">
+        <div class="container mt-3">
+            <div class="row">
+                <h2 class="mb-4 text-primary fw-bold"><i class="fas fa-info-circle me-2"></i>Thông tin sản phẩm</h2>
+                <div class="col-md-6">
+                    <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/15a.jpg" class="img-fluid" alt="Product Image" />
+                </div>
+                <div class="col-md-6">
+                    <h1 class="product-title">Product name</h1>
+                    <p class="product-description">
+                        <i class="fas fa-align-left me-2 text-muted"></i>
+                        <span class="icon-text">Product description: This is a high-quality product with sleek design and great functionality.</span>
+                    </p>
+                    <p class="product-price">
+                        <i class="fas fa-tag me-2 text-danger"></i>
+                        <span class="icon-text">Price: $100</span>
+                    </p>
+                    <div class="btn-group d-flex align-items-center gap-3 pt-3">
+                        <a href="#" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to cart
+                        </a>
+                        <a href="#" class="btn btn-success">
+                            <i class="fas fa-shopping-bag me-2"></i>Buy now
+                        </a>
+                        <button class="wishlist-btn" title="Add to wishlist">
+                            <i class="far fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-3">
+        <h2>Review</h2>
+        <div class="container mt-4">
+            <!-- Nav Tabs -->
+            <ul class="nav nav-tabs" id="productTab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="description-tab" data-bs-toggle="tab"
+                        data-bs-target="#description" type="button" role="tab" aria-controls="description"
+                        aria-selected="true">Mô tả sản phẩm</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews"
+                        type="button" role="tab" aria-controls="reviews" aria-selected="false">Đánh giá của các khách
+                        hàng</button>
+                </li>
+                <li class="nav-item" role="presentation" sec:authorize="isAuthenticated()">
+                    <button class="nav-link" id="evaluate-tab" data-bs-toggle="tab" data-bs-target="#evaluate"
+                        type="button" role="tab" aria-controls="evaluate" aria-selected="false">Đánh giá</button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="productTabContent">
+                <!-- Tab Mô tả sản phẩm -->
+                <div class="tab-pane fade show active" id="description" role="tabpanel"
+                    aria-labelledby="description-tab">
+                    <div class="p-3">
+                        <h5>Mô tả sản phẩm</h5>
+                        <p>Đây là phần mô tả sản phẩm. Ví dụ: Sản phẩm chất lượng cao, thiết kế đẹp, phù hợp với mọi nhu
+                            cầu.</p>
+                    </div>
+                </div>
+
+                <!-- Tab Đánh giá của khách hàng -->
+                <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
+                    <div class="p-3">
+                        <h5>Đánh giá của khách hàng</h5>
+                        <div class="mb-3">
+                            <strong>Nguyễn Văn A</strong> - <span class="text-warning">★★★★☆</span>
+                            <p>Sản phẩm tốt, giao hàng nhanh, sẽ mua lại!</p>
+                        </div>
+                        <div class="mb-3">
+                            <strong>Trần Thị B</strong> - <span class="text-warning">★★★☆☆</span>
+                            <p>Chất lượng ổn, nhưng đóng gói chưa kỹ.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab Đánh giá (Form cho khách hàng) -->
+                <div class="tab-pane fade" id="evaluate" role="tabpanel" aria-labelledby="evaluate-tab">
+                    <div class="p-3">
+                        <h5>Đánh giá sản phẩm</h5>
+                        <form action="#" method="post">
+                            <div class="mb-3">
+                                <label for="rating" class="form-label">Điểm đánh giá (1-5)</label>
+                                <input type="number" class="form-control" id="rating" name="rating" min="1" max="5"
+                                    placeholder="Nhập số từ 1 đến 5" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="reviewText" class="form-label">Nhận xét của bạn</label>
+                                <textarea class="form-control" id="reviewText" name="reviewText" rows="4"
+                                    placeholder="Viết nhận xét của bạn..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Gửi đánh giá</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="container mt-3">
+        <h2>Sản phẩm liên quan</h2>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card">
+                    <a href="#">
+                        <img src="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12a.jpg"
+                            class="card-img-top" alt="..." />
+                    </a>
+                    <div class="card-body">
+                        <h5 class="card-title">Product name</h5>
+                        <p class="card-text">Price: $100</p>
+                        <div class="btn-group card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
+                            <a href="#" class="btn btn-primary">
+                                <i class="fas fa-shopping-cart me-2"></i>Add to cart
+                            </a>
+                            <a href="#" class="btn btn-success">Buy now</a>
+                            <button class="wishlist-btn" title="Add to wishlist">
+                                <i class="far fa-heart"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-5">
+        <!-- Footer -->
+        <footer class="text-center text-lg-start text-dark" style="background-color: #ECEFF1">
+            <!-- Section: Social media -->
+            <section class="d-flex justify-content-between p-4 text-white" style="background-color: #21D192">
+                <!-- Left -->
+                <div class="me-5">
+                    <span>Get connected with us on social networks:</span>
+                </div>
+                <!-- Left -->
+
+                <!-- Right -->
+                <div>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <!-- Right -->
+            </section>
+            <!-- Section: Social media -->
+
+            <!-- Section: Links  -->
+            <section class="">
+                <div class="container text-center text-md-start mt-5">
+                    <!-- Grid row -->
+                    <div class="row mt-3">
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                            <!-- Content -->
+                            <h6 class="text-uppercase fw-bold">Company name</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p>
+                                Here you can use rows and columns to organize your footer
+                                content. Lorem ipsum dolor sit amet, consectetur adipisicing
+                                elit.
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold">Products</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p>
+                                <a href="#!" class="text-dark">MDBootstrap</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-dark">MDWordPress</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-dark">BrandFlow</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-dark">Bootstrap Angular</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold">Useful links</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p>
+                                <a href="#!" class="text-dark">Your Account</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-dark">Become an Affiliate</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-dark">Shipping Rates</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-dark">Help</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+
+                        <!-- Grid column -->
+                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold">Contact</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+                            <p><i class="fas fa-envelope mr-3"></i> info@example.com</p>
+                            <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                            <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                    <!-- Grid row -->
+                </div>
+            </section>
+            <!-- Section: Links  -->
+
+            <!-- Copyright -->
+            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+                © 2020 Copyright:
+                <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+        crossorigin="anonymous"></script>
+</body>
+</body>
+
+</html>
