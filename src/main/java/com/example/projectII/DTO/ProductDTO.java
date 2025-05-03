@@ -23,4 +23,7 @@ public class ProductDTO {
     @Nullable
     private String status;
 
+    @Nullable
+    private int purchaseNumber = 0; // Initialize purchase number to 0
+
 }

@@ -7,7 +7,7 @@ import com.example.projectII.Entity.Shop;
 import com.example.projectII.Entity.ShopCategory;
 
 import java.util.List;
-import java.util.Optional;
+
 
 
 @Repository

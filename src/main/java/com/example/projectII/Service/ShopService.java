@@ -1,13 +1,10 @@
 package com.example.projectII.Service;
 
-import java.lang.foreign.Linker.Option;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.Locale.Category;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -82,5 +79,9 @@ public class ShopService {
 
     public Optional<Shop> getShopByShopOwner(ShopOwner shopOwner) {
         return shopRepository.findByShopOwner(shopOwner);
+    }
+
+    public ShopCategory getCategoryByID(int categoryID) {
+        return shopCategoryRepository.findById(categoryID).orElse(null);
     }
 }

@@ -2,21 +2,28 @@ package com.example.projectII.Entity;
 
 import java.time.LocalDate;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "promotion")
+@Table(name = "promotion_for_cate")
 @Data
-public class Promotion {
+public class PromotionForCate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "promotionid")
     private int promotionID;
-
+    
     @ManyToOne
-    @JoinColumn(name = "productid")
-    private Product product;
+    @JoinColumn(name = "categoryid")
+    private ShopCategory shopCategory;
 
     @ManyToOne
     @JoinColumn(name = "shopid")

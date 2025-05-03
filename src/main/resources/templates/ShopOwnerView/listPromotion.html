@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Danh Sách Sản Phẩm - Quản Lý Cửa Hàng</title>
+    <title>Danh Sách Khuyến Mại - Quản Lý Cửa Hàng</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -39,26 +39,11 @@
             margin-bottom: 20px;
         }
 
-        .product-image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 4px;
-        }
-
         .filter-section {
             background-color: #f8f9fa;
             padding: 15px;
             border-radius: 8px;
             margin-bottom: 20px;
-        }
-
-        .product-card {
-            transition: transform 0.2s;
-        }
-
-        .product-card:hover {
-            transform: translateY(-5px);
         }
 
         .modal-content {
@@ -126,19 +111,19 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="/shopowner/dashboard" class="nav-link">
                         <i class="fas fa-home me-2"></i>
                         Dashboard
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link active" aria-current="page">
+                    <a href="/shopowner/productlist" class="nav-link">
                         <i class="fas fa-box me-2"></i>
                         Sản Phẩm
                     </a>
                 </li>
                 <li>
-                    <a href="/shopowner/promotion" class="nav-link">
+                    <a href="/shopowner/promotion" class="nav-link active" aria-current="page">
                         <i class="fas fa-plus-circle me-2"></i>
                         Danh sách khuyến mại
                     </a>
@@ -181,7 +166,7 @@
                     <li>
                         <hr class="dropdown-divider">
                     </li>
-                    <li><a class="dropdown-item" href="#">Đăng xuất</a></li>
+                    <li><a class="dropdown-item" href="/all/logout">Đăng xuất</a></li>
                 </ul>
             </div>
         </div>
@@ -192,11 +177,12 @@
         <div class="container-fluid">
             <div class="row mb-4">
                 <div class="col-md-12">
-                    <h2>Danh Sách Sản Phẩm</h2>
+                    <h2>Danh Sách Khuyến Mại</h2>
+                    <input type="hidden" id="shopID" th:value="${shopID}">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Sản Phẩm</li>
+                            <li class="breadcrumb-item active" aria-current="page">Khuyến Mại</li>
                         </ol>
                     </nav>
                 </div>
@@ -208,6 +194,13 @@
                     <div class="filter-section">
                         <div class="row align-items-center">
                             <div class="col-md-3">
+                                <label for="promotionTypeFilter" class="form-label">Loại Khuyến Mại</label>
+                                <select id="promotionTypeFilter" class="form-select">
+                                    <option value="PRODUCT" selected>Khuyến Mại Sản Phẩm</option>
+                                    <option value="CATEGORY">Khuyến Mãi Danh Mục</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
                                 <label for="categoryFilter" class="form-label">Lọc theo Danh Mục</label>
                                 <select id="categoryFilter" class="form-select">
                                     <option value="">Tất cả</option>
@@ -217,17 +210,18 @@
                             <div class="col-md-3">
                                 <label for="sortBy" class="form-label">Sắp xếp theo</label>
                                 <select id="sortBy" class="form-select">
-                                    <option value="name-asc">Tên (A-Z)</option>
-                                    <option value="name-desc">Tên (Z-A)</option>
-                                    <option value="price-asc">Giá (Thấp-Cao)</option>
-                                    <option value="price-desc">Giá (Cao-Thấp)</option>
+                                    <option value="discount-asc">Khuyến Mãi (Thấp-Cao)</option>
+                                    <option value="discount-desc">Khuyến Mãi (Cao-Thấp)</option>
                                 </select>
                             </div>
-                            <div class="col-md-6 text-end">
-                                
+                            <div class="col-md-3 text-end">
                                 <button type="button" class="btn btn-info" data-bs-toggle="modal"
-                                    data-bs-target="#addPromotionModal">
-                                    <i class="fas fa-file-import me-1"></i> Thêm khuyến mại
+                                    data-bs-target="#addPromotionProductModal">
+                                    <i class="fas fa-file-import me-1"></i> Thêm Khuyến Mãi Sản Phẩm
+                                </button>
+                                <button type="button" class="btn btn-info" data-bs-toggle="modal"
+                                    data-bs-target="#addPromotionCategoryModal">
+                                    <i class="fas fa-file-import me-1"></i> Thêm Khuyến Mãi Danh Mục
                                 </button>
                             </div>
                         </div>
@@ -235,9 +229,35 @@
                 </div>
             </div>
 
-            <!-- Product List -->
-            <div class="row" id="productList">
-                <!-- Products will be dynamically added here -->
+            <!-- Promotion List -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Danh Sách Khuyến Mại</h5>
+                            <div class="table-responsive">
+                                <table class="table table-hover" id="promotionTable">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Mã</th>
+                                            <th scope="col">Mã sản phẩm</th>
+                                            <th scope="col">Tên</th>
+                                            <th scope="col">Giá Niêm Yết</th>
+                                            <th scope="col">Tỉ Lệ Khuyến Mại</th>
+                                            <th scope="col">Giá Bán</th>
+                                            <th scope="col">Ngày Bắt Đầu</th>
+                                            <th scope="col">Ngày Kết Thúc</th>
+                                            <th scope="col">Hành Động</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="promotionList">
+                                        <!-- Dữ liệu sẽ được thêm động -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Pagination -->
@@ -251,155 +271,259 @@
                 </div>
             </div>
 
-            <!-- Modal for Adding Category -->
-
-
-            <!-- Modal for Adding Product -->
-
-
-            
-
-            <!-- Promotion Add Modal -->
-            <div class="modal fade" id="addPromotionModal" tabindex="-1" aria-labelledby="addPromotionModalLabel"
+            <!-- Add Promotion Product Modal -->
+            <div class="modal fade" id="addPromotionProductModal" tabindex="-1" aria-labelledby="addProductModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="addProductModalLabel">Thêm Sản Phẩm Mới</h5>
+                            <h5 class="modal-title" id="addProductModalLabel">Thêm Khuyến Mãi Cho Sản Phẩm</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="row">
                                 <div class="col-lg-8">
                                     <!-- Product Information Form -->
-                                    <form id="addPromotion">
+                                    <form id="addPromotionForProductForm">
                                         <div class="row mb-3">
                                             <div class="col-md-6">
-                                                <label for="productID" class="form-label">Mã Sản Phẩm (productID) <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="productID" required
-                                                    placeholder="Nhập mã sản phẩm">
+                                                <label for="promotionProductID" class="form-label">Mã Sản Phẩm
+                                                    (productID) <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="promotionProductID"
+                                                    placeholder="Nhập mã sản phẩm" oninput="fetchProductDetails()"
+                                                    required>
                                                 <div class="invalid-feedback">Vui lòng nhập mã sản phẩm!</div>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="productName" class="form-label">Tên Sản Phẩm (productName)
+                                                <label for="promotionProductName" class="form-label">Tên Sản Phẩm
+                                                    (productName)</label>
+                                                <input type="text" class="form-control" id="promotionProductName"
+                                                    placeholder="Tên sản phẩm" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionProductCategoryID" class="form-label">Mã Danh Mục
+                                                    (categoryID)</label>
+                                                <input type="text" class="form-control" id="promotionProductCategoryID"
+                                                    placeholder="Mã danh mục" readonly>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="promotionProductCategoryName" class="form-label">Tên Danh
+                                                    Mục</label>
+                                                <input type="text" class="form-control"
+                                                    id="promotionProductCategoryName" placeholder="Tên danh mục"
+                                                    readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionProductShopID" class="form-label">Mã Cửa Hàng
+                                                    (shopID) <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="promotionProductShopID"
+                                                    th:value="${shopID}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionProductInputCost" class="form-label">Giá Nhập
+                                                    (inputCost)</label>
+                                                <div class="input-group">
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        id="promotionProductInputCost" placeholder="Giá nhập" readonly>
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="promotionProductCost" class="form-label">Giá Niêm Yết (cost)
+                                                </label>
+                                                <div class="input-group">
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        id="promotionProductCost" placeholder="Giá niêm yết" readonly>
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionProductDiscount" class="form-label">Nhập Discount
                                                     <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="productName" required
-                                                    placeholder="Nhập tên sản phẩm">
-                                                <div class="invalid-feedback">Vui lòng nhập tên sản phẩm!</div>
+                                                <div class="input-group">
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        id="promotionProductDiscount" required
+                                                        placeholder="Nhập discount" oninput="calculateSellCost()">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                                <div class="invalid-feedback">Vui lòng nhập discount!</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="promotionProductSellCost" class="form-label">Giá Bán
+                                                    (sellCost)</label>
+                                                <div class="input-group">
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        id="promotionProductSellCost" placeholder="Giá bán" readonly>
+                                                    <span class="input-group-text">đ</span>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="row mb-3">
                                             <div class="col-md-6">
-                                                <label for="categoryID" class="form-label">Danh Mục <span
+                                                <label for="promotionStartDate" class="form-label">Ngày Bắt Đầu <span
                                                         class="text-danger">*</span></label>
-                                                <select class="form-select" id="categoryID" required>
-                                                    <option value="">Chọn danh mục</option>
-                                                    <!-- Categories will be loaded dynamically -->
-                                                </select>
-                                                <div class="invalid-feedback">Vui lòng chọn danh mục!</div>
+                                                <input type="date" class="form-control" id="promotionStartDate"
+                                                    required>
+                                                <div class="invalid-feedback">Vui lòng chọn ngày bắt đầu!</div>
                                             </div>
                                             <div class="col-md-6">
-                                                <label for="shopID" class="form-label">Mã Cửa Hàng (shopID) <span
+                                                <label for="promotionEndDate" class="form-label">Ngày Kết Thúc <span
                                                         class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="shopID" th:value="${shopID}"
+                                                <input type="date" class="form-control" id="promotionEndDate" required>
+                                                <div class="invalid-feedback">Vui lòng chọn ngày kết thúc!</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionProductQuantityInStock" class="form-label">Số Lượng
+                                                    Tồn Kho (quantityInStock)</label>
+                                                <input type="number" class="form-control"
+                                                    id="promotionProductQuantityInStock" placeholder="Số lượng tồn kho"
                                                     readonly>
                                             </div>
-                                        </div>
-
-                                        <div class="row mb-3">
                                             <div class="col-md-6">
-                                                <label for="inputCost" class="form-label">Giá nhập (input cost) <span
-                                                        class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="inputCost" required
-                                                        placeholder="Nhập giá nhập">
-                                                    <span class="input-group-text">đ</span>
-                                                </div>
-                                                <div class="invalid-feedback">Vui lòng nhập giá nhập!</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="cost" class="form-label">Giá Niêm Yết (cost) <span
-                                                        class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="cost" required
-                                                        placeholder="Nhập giá niêm yết">
-                                                    <span class="input-group-text">đ</span>
-                                                </div>
-                                                <div class="invalid-feedback">Vui lòng nhập giá niêm yết!</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="cost" class="form-label">Tỉ lệ khuyến mại <span
-                                                        class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="discount" required
-                                                        placeholder="Nhập khuyến mại">
-                                                    <span class="input-group-text"></span>
-                                                </div>
-                                                <div class="invalid-feedback">Vui lòng nhập tỉ lệ khuyến mại (0 -1 )!
-                                                </div>
-                                            </div>
-
-                                            <div class="col-md-6">
-                                                <label for="sellCost" class="form-label">Giá Bán (sellCost) <span
-                                                        class="text-danger">*</span></label>
-                                                <div class="input-group">
-                                                    <input type="number" class="form-control" id="sellCost" required
-                                                        placeholder="Nhập giá bán">
-                                                    <span class="input-group-text">đ</span>
-                                                </div>
-                                                <div class="invalid-feedback">Vui lòng nhập giá bán!</div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row mb-3">
-                                            <div class="col-md-6">
-                                                <label for="quantityInStock" class="form-label">Số Lượng Tồn Kho
-                                                    (quantityInStock) <span class="text-danger">*</span></label>
-                                                <input type="number" class="form-control" id="quantityInStock" required
-                                                    placeholder="Nhập số lượng tồn kho">
-                                                <div class="invalid-feedback">Vui lòng nhập số lượng tồn kho!</div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label for="viewCount" class="form-label">Lượt Xem (viewCount)</label>
-                                                <input type="number" class="form-control" id="viewCount" value="0"
-                                                    readonly>
+                                                <label for="promotionProductViewCount" class="form-label">Lượt Xem
+                                                    (viewCount)</label>
+                                                <input type="number" class="form-control" id="promotionProductViewCount"
+                                                    value="0" readonly>
                                             </div>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="description" class="form-label">Mô Tả Sản Phẩm
+                                            <label for="promotionProductDescription" class="form-label">Mô Tả Khuyến Mãi
                                                 (description)</label>
-                                            <textarea class="form-control" id="description" rows="4"
-                                                placeholder="Nhập mô tả chi tiết về sản phẩm"></textarea>
+                                            <textarea class="form-control" id="promotionProductDescription" rows="4"
+                                                placeholder="Nhập mô tả chi tiết về khuyến mãi"></textarea>
                                         </div>
                                     </form>
                                 </div>
 
                                 <div class="col-lg-4">
-                                    <!-- Product Image Upload -->
-                                    <div class="drag-area" id="dragArea">
-                                        <i class="fas fa-cloud-upload-alt mb-3"></i>
-                                        <h5>Kéo & Thả để Tải Ảnh</h5>
-                                        <p>hoặc</p>
-                                        <button type="button" class="btn btn-primary" id="browseBtn">Chọn Tệp</button>
-                                        <input type="file" id="fileInput" hidden accept="image/*">
-                                        <p class="text-muted mt-2">Hỗ trợ: JPG, JPEG, PNG</p>
-                                    </div>
                                     <div class="mt-3 text-center">
-                                        <img id="imagePreview" src="/api/placeholder/300/300" class="image-preview"
-                                            alt="Preview" style="display: none;">
+                                        <img id="promotionProductImage" src="/api/placeholder/300/300"
+                                            class="image-preview" alt="Preview" style="display: none;">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                            <button type="submit" form="addProductForm" class="btn btn-primary">Thêm Sản Phẩm</button>
+                            <button type="submit" form="addPromotionForProductForm" class="btn btn-primary">Thêm Khuyến
+                                Mãi</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add Promotion Category Modal -->
+            <div class="modal fade" id="addPromotionCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addCategoryModalLabel">Thêm Khuyến Mãi Cho Danh Mục</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-lg-8">
+                                    <!-- Category Information Form -->
+                                    <form id="addPromotionForCategoryForm">
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionCategoryID" class="form-label">Mã Danh Mục
+                                                    (categoryID) <span class="text-danger">*</span></label>
+                                                <select class="form-select" id="promotionCategoryID" required
+                                                    onchange="fetchCategoryDetails()">
+                                                    <option value="">Chọn mã danh mục</option>
+                                                    <!-- Categories will be loaded dynamically -->
+                                                </select>
+                                                <div class="invalid-feedback">Vui lòng chọn mã danh mục!</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="promotionCategoryName" class="form-label">Tên Danh Mục
+                                                    (categoryName)</label>
+                                                <input type="text" class="form-control" id="promotionCategoryName"
+                                                    placeholder="Tên danh mục" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionCategoryShopID" class="form-label">Mã Cửa Hàng
+                                                    (shopID) <span class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="promotionCategoryShopID"
+                                                    th:value="${shopID}" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionCategoryDiscount" class="form-label">Nhập Discount
+                                                    <span class="text-danger">*</span></label>
+                                                <div class="input-group">
+                                                    <input type="number" step="0.01" class="form-control"
+                                                        id="promotionCategoryDiscount" required
+                                                        placeholder="Nhập discount"
+                                                        oninput="calculateCategorySellCost()">
+                                                    <span class="input-group-text">%</span>
+                                                </div>
+                                                <div class="invalid-feedback">Vui lòng nhập discount!</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row mb-3">
+                                            <div class="col-md-6">
+                                                <label for="promotionStartDateCategory" class="form-label">Ngày Bắt Đầu
+                                                    <span class="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="promotionStartDateCategory"
+                                                    required>
+                                                <div class="invalid-feedback">Vui lòng chọn ngày bắt đầu!</div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="promotionEndDateCategory" class="form-label">Ngày Kết Thúc
+                                                    <span class="text-danger">*</span></label>
+                                                <input type="date" class="form-control" id="promotionEndDateCategory"
+                                                    required>
+                                                <div class="invalid-feedback">Vui lòng chọn ngày kết thúc!</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="promotionCategoryDescription" class="form-label">Mô Tả Khuyến
+                                                Mãi
+                                                (description)</label>
+                                            <textarea class="form-control" id="promotionCategoryDescription" rows="4"
+                                                placeholder="Nhập mô tả chi tiết về khuyến mãi"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+
+                                <div class="col-lg-4">
+                                    <div class="mt-3 text-center">
+                                        <p>Không hỗ trợ hình ảnh cho danh mục.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                            <button type="submit" form="addPromotionForCategoryForm" class="btn btn-primary">Thêm Khuyến
+                                Mãi</button>
                         </div>
                     </div>
                 </div>
@@ -407,58 +531,604 @@
         </div>
     </div>
 
+
+    
+    <!-- Edit Promotion Modal -->
+<!-- Edit Promotion Modal -->
+<div class="modal fade" id="editPromotionModal" tabindex="-1" aria-labelledby="editPromotionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPromotionModalLabel">Sửa Khuyến Mãi</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="editPromotionID">
+                <input type="hidden" id="editPromotionType">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <!-- Promotion Information Form -->
+                        <form id="editPromotionForm">
+                            <div id="editProductFields" style="display: none;">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editProductID" class="form-label">Mã Sản Phẩm (productID) <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="editProductID" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editProductName" class="form-label">Tên Sản Phẩm (productName)</label>
+                                        <input type="text" class="form-control" id="editProductName" readonly>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editProductCategoryID" class="form-label">Mã Danh Mục (categoryID)</label>
+                                        <input type="text" class="form-control" id="editProductCategoryID" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editProductCategoryName" class="form-label">Tên Danh Mục</label>
+                                        <input type="text" class="form-control" id="editProductCategoryName" readonly>
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editCost" class="form-label">Giá Niêm Yết (cost)</label>
+                                        <div class="input-group">
+                                            <input type="number" step="0.01" class="form-control" id="editCost" readonly>
+                                            <span class="input-group-text">đ</span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editSellCost" class="form-label">Giá Bán (sellCost)</label>
+                                        <div class="input-group">
+                                            <input type="number" step="0.01" class="form-control" id="editSellCost" readonly>
+                                            <span class="input-group-text">đ</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="editCategoryFields" style="display: none;">
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="editCateCategoryID" class="form-label">Mã Danh Mục (categoryID) <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="editCateCategoryID" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="editCateCategoryName" class="form-label">Tên Danh Mục (categoryName)</label>
+                                        <input type="text" class="form-control" id="editCateCategoryName" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="editDiscount" class="form-label">Tỉ Lệ Khuyến Mại (%) <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <input type="number" step="0.01" class="form-control" id="editDiscount" required>
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                    <div class="invalid-feedback">Vui lòng nhập tỉ lệ khuyến mãi!</div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <label for="editStartDate" class="form-label">Ngày Bắt Đầu <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="editStartDate" required>
+                                    <div class="invalid-feedback">Vui lòng chọn ngày bắt đầu!</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="editEndDate" class="form-label">Ngày Kết Thúc <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="editEndDate" required>
+                                    <div class="invalid-feedback">Vui lòng chọn ngày kết thúc!</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDescription" class="form-label">Mô Tả Khuyến Mãi (description)</label>
+                                <textarea class="form-control" id="editDescription" rows="4" placeholder="Nhập mô tả chi tiết về khuyến mãi"></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mt-3 text-center">
+                            <img id="editPromotionImage" src="/api/placeholder/300/300" class="image-preview" alt="Preview" style="display: none;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="button" class="btn btn-primary" onclick="saveEditedPromotion()">Lưu</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('editPromotionModal').addEventListener('shown.bs.modal', function () {
+        const type = document.getElementById('editPromotionType').value;
+        document.getElementById('editProductFields').style.display = type === 'PRODUCT' ? 'block' : 'none';
+        document.getElementById('editCategoryFields').style.display = type === 'CATEGORY' ? 'block' : 'none';
+    });
+</script>
+    
+
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function (){
-            document.getElementById('productID').addEventListener('change', function (){
-                const productID = this.value;
-                if (productID) {
-                    fetchProductInfo(productID);
-                }
-            });
+        // Load danh sách khuyến mại
+        function loadPromotions(type = 'PRODUCT') {
+            const shopID = document.getElementById('shopID').value || 1;
+            const url = type === 'PRODUCT'
+                ? `/shopowner/getpromotion_for_product_byshopid/${shopID}`
+                : `/shopowner/getpromotion_for_cate_byshopid/${shopID}`;
 
-            function calculateSellCost(){
-                const inputCost = document.getElementById('inputCost').value;
-                const cost = document.getElementById('cost').value;
-                const discount = document.getElementById('discount').value;
-                const sellCost = document.getElementById('sellCost');
-                if (discount) {
-                    const newSellCost = cost * (1 - discount);
-                    sellCost.value = newSellCost;
-                    document.getElementById('sellCost').value = newSellCost;
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
                 }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error(`Không thể tải danh sách khuyến mại: ${text}`);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const promotionList = document.getElementById('promotionList');
+                    promotionList.innerHTML = '';
+
+                    data.forEach(promotion => {
+                        const row = document.createElement('tr');
+                        const startDate = promotion.startDate ? new Date(promotion.startDate).toLocaleDateString('vi-VN') : 'Chưa xác định';
+                        const endDate = promotion.endDate ? new Date(promotion.endDate).toLocaleDateString('vi-VN') : 'Chưa xác định';
+
+                        if (type === 'PRODUCT') {
+                            row.innerHTML = `
+                        <td>${promotion.promotionID || 'N/A'}</td>
+                        <td>${promotion.productID || 'N/A'}</td>
+                        <td>${promotion.productName || 'N/A'}</td>
+                        <td>${promotion.cost ? promotion.cost.toLocaleString() + ' đ' : 'N/A'}</td>
+                        <td>${(promotion.discount * 100).toFixed(0)}%</td>
+                        <td>${promotion.sellCost ? promotion.sellCost.toLocaleString() + ' đ' : 'N/A'}</td>
+                        <td>${startDate}</td>
+                        <td>${endDate}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary me-1" onclick="editPromotion(${promotion.productID}, '${promotion.type}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deletePromotion(${promotion.productID}, '${promotion.type}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                        } else {
+                            row.innerHTML = `
+                        <td>${promotion.promotionForCateID || 'N/A'}</td>
+                        <td>${promotion.shopCategoryID || 'N/A'}</td>
+                        <td>${promotion.categoryName || 'N/A'}</td>
+                        <td>N/A</td>
+                        <td>${(promotion.discount * 100).toFixed(0)}%</td>
+                        <td>N/A</td>
+                        <td>${startDate}</td>
+                        <td>${endDate}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary me-1" onclick="editPromotion(${promotion.promotionForCateID}, '${promotion.type}')">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="deletePromotion(${promotion.promotionForCateID}, '${promotion.type}')">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                        }
+                        promotionList.appendChild(row);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching promotions:', error);
+                    alert('Không thể tải danh sách khuyến mại: ' + error.message);
+                });
+        }
+
+        // Xử lý thay đổi loại khuyến mại
+        document.getElementById('promotionTypeFilter').addEventListener('change', function () {
+            const type = this.value;
+            const table = document.getElementById('promotionTable');
+            const thead = table.querySelector('thead tr');
+            thead.innerHTML = '';
+
+            if (type === 'PRODUCT') {
+                thead.innerHTML = `
+                    <th scope="col">Mã</th>
+                    <th scope="col">Mã Sản Phẩm</th>
+                    <th scope="col">Tên Sản Phẩm</th>
+                    <th scope="col">Giá Niêm Yết</th>
+                    <th scope="col">Tỉ Lệ Khuyến Mại</th>
+                    <th scope="col">Giá Bán</th>
+                    <th scope="col">Ngày Bắt Đầu</th>
+                    <th scope="col">Ngày Kết Thúc</th>
+                    <th scope="col">Hành Động</th>
+                `;
+            } else {
+                thead.innerHTML = `
+                    <th scope="col">Mã</th>
+                    <th scope="col">Mã Danh Mục</th>
+                    <th scope="col">Tên Danh Mục</th>
+                    <th scope="col">Giá Niêm Yết</th>
+                    <th scope="col">Tỉ Lệ Khuyến Mại</th>
+                    <th scope="col">Giá Bán</th>
+                    <th scope="col">Ngày Bắt Đầu</th>
+                    <th scope="col">Ngày Kết Thúc</th>
+                    <th scope="col">Hành Động</th>
+                `;
             }
+            loadPromotions(type);
+        });
 
-            function fetchProductInfo(productID) {
-                fetch('/product/getproductbyid/' + productID)
+        // Lấy thông tin sản phẩm dựa trên productID
+        function fetchProductDetails() {
+            const productID = document.getElementById('promotionProductID').value;
+            if (productID) {
+                fetch(`/product/getproductbyid/${productID}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
                     .then(response => {
                         if (!response.ok) {
-                            throw new Error('Network response was not ok');
+                            throw new Error('Không tìm thấy sản phẩm');
                         }
                         return response.json();
                     })
-                    .then(data => {
-                        console.log(data);
-                        if (data) {
-                            document.getElementById('productName').value = data.productName;
-                            document.getElementById('categoryID').value = data.categoryID;
-                            document.getElementById('shopID').value = data.shopID;
-                            document.getElementById('inputCost').value = data.inputCost;
-                            document.getElementById('cost').value = data.cost;
-                            document.getElementById('sellCost').value = data.sellCost;
-                            document.getElementById('quantityInStock').value = data.quantityInStock;
-                            document.getElementById('viewCount').value = data.viewCount;
-                            document.getElementById('description').value = data.description;
-                            document.getElementById('imagePreview').src = data.image;
-                            document.getElementById('imagePreview').style.display = 'block';
-                            
-                            document.getElementById('discount').addEventListener('change', calculateSellCost);
-                        }
+                    .then(product => {
+                        document.getElementById('promotionProductName').value = product.productName || 'Không tìm thấy';
+                        document.getElementById('promotionProductCategoryID').value = product.categoryID || '';
+                        document.getElementById('promotionProductCategoryName').value = product.categoryName || '';
+                        document.getElementById('promotionProductInputCost').value = product.inputCost || '';
+                        document.getElementById('promotionProductCost').value = product.cost || '';
+                        document.getElementById('promotionProductQuantityInStock').value = product.quantityInStock || '';
+                        document.getElementById('promotionProductViewCount').value = product.viewCount || 0;
+                        document.getElementById('promotionProductImage').src = product.imageUrl || '/api/placeholder/300/300';
+                        document.getElementById('promotionProductImage').style.display = product.imageUrl ? 'block' : 'none';
+                        calculateSellCost(); // Tính lại giá bán khi có dữ liệu mới
                     })
-                    .catch(error => console.error(error));
+                    .catch(error => {
+                        console.error('Error fetching product details:', error);
+                        resetProductFields();
+                    });
+            } else {
+                resetProductFields();
             }
+        }
+
+        // Lấy thông tin danh mục dựa trên categoryID
+        function fetchCategoryDetails() {
+            const categoryID = document.getElementById('promotionCategoryID').value;
+            const categoryIDInt = parseInt(categoryID, 10);
+            if (categoryID) {
+                fetch(`/shopowner/getcategorybyid/${categoryIDInt}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Không tìm thấy danh mục');
+                        }
+                        return response.json();
+                    })
+                    .then(category => {
+                        document.getElementById('promotionCategoryName').value = category.categoryName || 'Không tìm thấy';
+                    })
+                    .catch(error => {
+                        console.error('Error fetching category details:', error);
+                        document.getElementById('promotionCategoryName').value = 'Không tìm thấy';
+                    });
+            } else {
+                document.getElementById('promotionCategoryName').value = '';
+            }
+        }
+
+        // Tính giá bán cho sản phẩm
+        function calculateSellCost() {
+            const cost = parseFloat(document.getElementById('promotionProductCost').value) || 0;
+            const discount = parseFloat(document.getElementById('promotionProductDiscount').value) || 0;
+            const sellCost = cost * (1 - discount / 100);
+            document.getElementById('promotionProductSellCost').value = sellCost.toFixed(2);
+        }
+
+        // Tính giá bán cho danh mục (giả định không có giá cố định, chỉ dùng để minh họa)
+        function calculateCategorySellCost() {
+            // Lưu ý: Danh mục không có giá cố định, nên chỉ cập nhật logic nếu cần
+            const discount = parseFloat(document.getElementById('promotionCategoryDiscount').value) || 0;
+            // Giả định không tính sellCost cho danh mục, chỉ giữ discount
+            // Nếu cần tính dựa trên sản phẩm trong danh mục, cần API bổ sung
+        }
+
+        // Reset các trường sản phẩm khi không hợp lệ
+        function resetProductFields() {
+            document.getElementById('promotionProductName').value = '';
+            document.getElementById('promotionProductCategoryID').value = '';
+            document.getElementById('promotionProductCategoryName').value = '';
+            document.getElementById('promotionProductInputCost').value = '';
+            document.getElementById('promotionProductCost').value = '';
+            document.getElementById('promotionProductQuantityInStock').value = '';
+            document.getElementById('promotionProductViewCount').value = 0;
+            document.getElementById('promotionProductImage').style.display = 'none';
+            document.getElementById('promotionProductSellCost').value = '';
+        }
+
+        // Xử lý submit form thêm khuyến mại cho sản phẩm
+        document.getElementById('addPromotionForProductForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+
+            if (isValid) {
+                const formData = new FormData();
+                formData.append('shopID', document.getElementById('promotionProductShopID').value);
+                formData.append('promotionType', 'PRODUCT');
+                formData.append('productID', document.getElementById('promotionProductID').value);
+                formData.append('productName', document.getElementById('promotionProductName').value);
+                formData.append('categoryID', document.getElementById('promotionProductCategoryID').value);
+                formData.append('categoryName', document.getElementById('promotionProductCategoryName').value);
+                formData.append('inputCost', document.getElementById('promotionProductInputCost').value);
+                formData.append('cost', document.getElementById('promotionProductCost').value);
+                formData.append('discount', document.getElementById('promotionProductDiscount').value / 100); // Chuyển % thành số thập phân
+                formData.append('sellCost', document.getElementById('promotionProductSellCost').value);
+                formData.append('startDate', document.getElementById('promotionStartDate').value);
+                formData.append('endDate', document.getElementById('promotionEndDate').value);
+                formData.append('quantityInStock', document.getElementById('promotionProductQuantityInStock').value);
+                formData.append('viewCount', document.getElementById('promotionProductViewCount').value);
+                formData.append('description', document.getElementById('promotionProductDescription').value);
+
+                fetch('/shopowner/addpromotion', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                throw new Error('Thêm khuyến mại thất bại: ' + text);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(() => {
+                        alert('Khuyến mại đã được thêm thành công!');
+                        loadPromotions('PRODUCT');
+                        this.reset();
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addPromotionProductModal'));
+                        modal.hide();
+                        resetProductFields();
+                    })
+                    .catch(error => {
+                        console.error('Error adding promotion:', error);
+                        alert('Đã có lỗi xảy ra: ' + error.message);
+                    });
+            } else {
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+            }
+        });
+
+        // Xử lý submit form thêm khuyến mại cho danh mục
+        document.getElementById('addPromotionForCategoryForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const requiredFields = this.querySelectorAll('[required]');
+            let isValid = true;
+
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.classList.add('is-invalid');
+                    isValid = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+
+            if (isValid) {
+                const formData = new FormData();
+                formData.append('shopID', document.getElementById('promotionCategoryShopID').value);
+                formData.append('type', 'CATEGORY');
+                formData.append('shopCategoryID', document.getElementById('promotionCategoryID').value);
+                // formData.append('categoryName', document.getElementById('promotionCategoryName').value);
+                formData.append('discount', document.getElementById('promotionCategoryDiscount').value / 100); // Chuyển % thành số thập phân
+                formData.append('startDate', document.getElementById('promotionStartDateCategory').value);
+                formData.append('endDate', document.getElementById('promotionEndDateCategory').value);
+                formData.append('description', document.getElementById('promotionCategoryDescription').value);
+
+                fetch('/shopowner/addpromotion_for_cate', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                throw new Error('Thêm khuyến mại thất bại: ' + text);
+                            });
+                        }
+                        return response.json();
+                    })
+                    .then(() => {
+                        alert('Khuyến mại đã được thêm thành công!');
+                        loadPromotions('CATEGORY');
+                        this.reset();
+                        const modal = bootstrap.Modal.getInstance(document.getElementById('addPromotionCategoryModal'));
+                        modal.hide();
+                    })
+                    .catch(error => {
+                        console.error('Error adding promotion:', error);
+                        alert('Đã có lỗi xảy ra: ' + error.message);
+                    });
+            } else {
+                alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
+            }
+        });
+
+        // Hàm edit và delete (chưa triển khai chi tiết)
+        function editPromotion(id, type) {
+    const shopID = document.getElementById('shopID').value || 1;
+    const url = type === 'PRODUCT'
+        ? `/shopowner/getpromotion_for_product_byid/${id}`
+        : `/shopowner/getpromotion_for_cate_byid/${id}`;
+
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Không thể tải thông tin khuyến mại');
+            }
+            return response.json();
         })
+        .then(promotion => {
+            const modal = document.getElementById('editPromotionModal');
+            if (!modal) {
+                console.error('Modal không tồn tại');
+                return;
+            }
+
+            // Điền dữ liệu vào modal
+            document.getElementById('editPromotionID').value = promotion.promotionID || promotion.promotionForCateID || '';
+            document.getElementById('editPromotionType').value = type;
+            if (type === 'PRODUCT') {
+                document.getElementById('editProductID').value = promotion.productID || '';
+                document.getElementById('editProductName').value = promotion.productName || '';
+                document.getElementById('editProductCategoryID').value = promotion.categoryID || '';
+                document.getElementById('editProductCategoryName').value = promotion.categoryName || '';
+                document.getElementById('editCost').value = promotion.cost || '';
+                document.getElementById('editSellCost').value = promotion.sellCost || '';
+                document.getElementById('editPromotionImage').src = promotion.imageUrl || '/api/placeholder/300/300';
+                document.getElementById('editPromotionImage').style.display = promotion.imageUrl ? 'block' : 'none';
+            } else {
+                document.getElementById('editCateCategoryID').value = promotion.shopCategoryID || '';
+                document.getElementById('editCateCategoryName').value = promotion.categoryName || '';
+            }
+            document.getElementById('editDiscount').value = (promotion.discount * 100).toFixed(0) || '';
+            document.getElementById('editStartDate').value = promotion.startDate || '';
+            document.getElementById('editEndDate').value = promotion.endDate || '';
+            document.getElementById('editDescription').value = promotion.description || '';
+
+            // Hiển thị modal
+            const bootstrapModal = new bootstrap.Modal(modal);
+            bootstrapModal.show();
+        })
+        .catch(error => {
+            console.error('Error fetching promotion details:', error);
+            alert('Không thể tải thông tin khuyến mại: ' + error.message);
+        });
+}
+
+        function deletePromotion(id, promotionType) {
+            if (confirm(`Bạn có chắc chắn muốn xóa khuyến mại cho ${promotionType === 'PRODUCT' ? 'sản phẩm' : 'danh mục'} ID ${id}?`)) {
+                fetch(`/shopowner/deletepromotion/${id}/${promotionType}`, {
+                    method: 'DELETE'
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Xóa khuyến mại thất bại');
+                        }
+                        alert('Xóa khuyến mại thành công!');
+                        loadPromotions(document.getElementById('promotionTypeFilter').value);
+                    })
+                    .catch(error => {
+                        console.error('Error deleting promotion:', error);
+                        alert('Đã có lỗi xảy ra: ' + error.message);
+                    });
+            }
+        }
+
+        // Load danh mục vào select
+        function loadCategories() {
+            fetch('/shopowner/getcategory', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => response.json())
+                .then(categories => {
+                    const categorySelect = document.getElementById('promotionCategoryID');
+                    const categoryFilter = document.getElementById('categoryFilter');
+                    categories.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.shopCategoryID;
+                        option.textContent = category.categoryName;
+                        categorySelect.appendChild(option);
+
+                        const filterOption = document.createElement('option');
+                        filterOption.value = category.categoryID;
+                        filterOption.textContent = category.categoryName;
+                        categoryFilter.appendChild(filterOption);
+                    });
+                })
+                .catch(error => console.error('Error loading categories:', error));
+        }
+
+        function saveEditedPromotion() {
+            const id = document.getElementById('editPromotionID').value;
+            const type = document.getElementById('editPromotionType').value;
+            const url = type === 'PRODUCT'
+                ? `/shopowner/updatepromotion/${id}`
+                : `/shopowner/updatepromotion_for_cate/${id}`;
+
+            const formData = new FormData();
+            formData.append('discount', document.getElementById('editDiscount').value / 100); // Chuyển % thành số thập phân
+            formData.append('startDate', document.getElementById('editStartDate').value);
+            formData.append('endDate', document.getElementById('editEndDate').value);
+            formData.append('description', document.getElementById('editDescription').value);
+
+            // Nếu cần thêm các trường khác (ví dụ: productID, categoryID), có thể lấy từ modal
+            if (type === 'PRODUCT') {
+                formData.append('productID', document.getElementById('editProductID').value);
+            }
+
+            fetch(url, {
+                method: 'PUT',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => {
+                            throw new Error('Cập nhật khuyến mại thất bại: ' + text);
+                        });
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    alert('Khuyến mại đã được cập nhật thành công!');
+                    loadPromotions(type);
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('editPromotionModal'));
+                    modal.hide();
+                })
+                .catch(error => {
+                    console.error('Error updating promotion:', error);
+                    alert('Đã có lỗi xảy ra: ' + error.message);
+                });
+        }
+
+        // Load trang
+        document.addEventListener('DOMContentLoaded', function () {
+            loadPromotions('PRODUCT');
+            loadCategories();
+        });
     </script>
 </body>
 

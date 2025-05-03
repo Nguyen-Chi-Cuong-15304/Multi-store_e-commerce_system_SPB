@@ -60,6 +60,11 @@ public class PageController {
         }
         return "login";
     }
+
+    @GetMapping("/logout")
+    public String logoutPage() {
+        return "redirect:/all/login?logout=true";
+    }
     
     
     

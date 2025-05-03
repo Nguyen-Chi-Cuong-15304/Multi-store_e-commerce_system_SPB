@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.projectII.DTO.ProductDTO;
 import com.example.projectII.Entity.Product;
+import com.example.projectII.Entity.Shop;
 import com.example.projectII.Repository.ProductRepository;
 import com.example.projectII.Repository.ShopCategoryRepository;
 import com.example.projectII.Repository.ShopRepository;
@@ -36,6 +37,8 @@ public class ProductService {
         product.setInputPrice(productDTO.getInputCost());
         product.setShop(shopRepository.findById(productDTO.getShopID()).orElse(null));
         product.setShopCategory(shopCategoryRepository.findById(productDTO.getCategoryID()).orElse(null));
+        product.setPurchaseNumber(0); // Initialize purchase number to 0
+        product.setStatus("active"); // Set default status to "active"
         if(productDTO.getImage() != null) {
             String image = productDTO.getImage().getOriginalFilename();
             String path = "src/main/resources/static/Image/ProductIMG/";
@@ -63,7 +66,28 @@ public class ProductService {
     }
 
     public List<Product> getProductByShopID(int shopID) {
-        return productRepository.findByShop(shopRepository.findById(shopID).orElse(null));
+        Shop shop = shopRepository.findById(shopID).orElse(null);
+        if (shop == null) {
+            System.out.println("Shop not found with ID: " + shopID);
+            return null; // or throw an exception
+        }
+        else {
+            System.out.println("Shop not null " + shop.getShopName() + "Product service");
+            System.out.println("Shop ID: " + shop.getShopID());
+        }
+        List<Product> products = productRepository.findByShop(shop);
+        if (products == null || products.isEmpty()) {
+            System.out.println("No products found for shop " + shop.getShopName());
+            return null; // or throw an exception
+        }
+        else {
+            System.out.println("Products found for shop " + shop.getShopName() + ": " + products.size());
+        }
+        for (Product product : products) {
+            System.out.println("Product ID: " + product.getProductID() + ", Name: " + product.getProductName());
+        }
+        return products;
+        // return productRepository.findByShop(shopRepository.findById(shopID).orElse(null));
     }
 
     public void editProduct(ProductDTO productDTO) {
@@ -79,6 +103,7 @@ public class ProductService {
             product.setInputPrice(productDTO.getInputCost());
             product.setShop(shopRepository.findById(productDTO.getShopID()).orElse(null));
             product.setShopCategory(shopCategoryRepository.findById(productDTO.getCategoryID()).orElse(null));
+            
 
             if(productDTO.getStatus() != null) {
                 product.setStatus(productDTO.getStatus());

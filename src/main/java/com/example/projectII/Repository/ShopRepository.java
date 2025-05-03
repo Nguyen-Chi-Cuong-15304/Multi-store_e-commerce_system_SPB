@@ -14,5 +14,7 @@ public interface ShopRepository extends JpaRepository<Shop, Integer> {
     
     Optional<Shop> findByShopOwner(ShopOwner shopOwner);
 
+    // Shop findById(int shopID);
+
     
 }

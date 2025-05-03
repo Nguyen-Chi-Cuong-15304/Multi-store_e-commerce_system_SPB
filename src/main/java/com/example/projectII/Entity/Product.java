@@ -46,7 +46,7 @@ public class Product {
 
     @Column(name = "status")
     private String status;
-
-    
-
+    //luot mua
+    @Column(name = "purchasenumber")
+    private int purchaseNumber;
 }
