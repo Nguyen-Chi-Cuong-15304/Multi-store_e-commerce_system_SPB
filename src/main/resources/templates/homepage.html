@@ -4,429 +4,998 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Chủ - Shop Online</title>
+    <title>ShopOnline - Sàn thương mại đa cửa hàng</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-
-        .banner {
-            background: linear-gradient(to right, #ff7e5f, #feb47b);
-            color: white;
-            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
-            padding: 50px 0;
-            border-radius: 10px;
-        }
-
-        .category-card,
-        .store-card,
-        .product-card {
-            transition: transform 0.3s, box-shadow 0.3s;
-            border-radius: 10px;
-            padding: 15px;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            background: white;
-        }
-
-        .category-card i {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .category-card:hover,
-        .store-card:hover,
-        .product-card:hover {
-            transform: scale(1.05);
-            box-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
-        }
-
-        .footer {
-            background: linear-gradient(to right, #232526, #414345);
-            padding: 20px 0;
-        }
-
-        .store-card {
-            border: 1px solid #e0e0e0;
-            transition: box-shadow 0.2s;
-        }
-
-        .store-card:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .store-card h5 {
-            color: #315889;
-            /* Màu xanh đậm nhạt cho tiêu đề cửa hàng */
-            font-weight: 600;
-        }
-
-        .store-card p {
-            color: #7f8c8d;
-            /* Màu xám nhạt cho địa chỉ */
-            font-size: 0.9rem;
-        }
-
-        .section-title {
-            color: #e74c3c;
-            /* Màu đỏ cam nổi bật cho tiêu đề chính */
-            font-weight: bold;
-        }
-
-        .navbar .user-info {
-            color: #fff;
-            font-size: 16px;
-        }
-
-        .navbar .user-info a {
-            color: #fff;
-            text-decoration: none;
-        }
-
-        .navbar .user-info a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    <link rel="stylesheet" href="/CSS/homepage.css">
 </head>
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
-            <a class="navbar-brand" href="#">ShopOnline</a>
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-store me-2"></i>ShopOnline
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/all/">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/all/shop">Cửa hàng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/all/cart">Giỏ hàng</a></li>
-                    <li class="nav-item" th:if="${isLoggedIn}">
-                        <span class="nav-link">Xin chào, <span th:text="${fullname}"></span></span>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/all/">
+                            <i class="fas fa-home me-1"></i> Trang chủ
+                        </a>
                     </li>
-                    <li class="nav-item" th:if="${isLoggedIn}">
-                        <form th:action="@{/all/logout}" method="post" style="display: inline;">
-                            <button type="submit" class="nav-link">Đăng xuất</button>
-                        </form>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all/shop">
+                            <i class="fas fa-store me-1"></i> Cửa hàng
+                        </a>
                     </li>
-                    <li class="nav-item" th:unless="${isLoggedIn}">
-                        <a class="nav-link" th:href="@{/all/login}">Đăng nhập</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all/cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+                        </a>
                     </li>
-                    <li class="nav-item" th:unless="${isLoggedIn}">
-                        <a class="nav-link" th:href="@{/all/register}">Đăng ký</a>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> <span th:text="${fullname}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li th:if="${isLoggedIn}"><a class="dropdown-item" href="/all/logout">Đăng xuất</a></li>
+                            <li th:unless="${isLoggedIn}"><a class="dropdown-item" href="/all/login">Đăng nhập</a></li>
+                            <li th:unless="${isLoggedIn}"><a class="dropdown-item" href="/all/register">Đăng ký</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/all/dashboard">Trang cá nhân</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Banner -->
-    <div class="container mt-4">
-        <div class="banner text-center">
-            <h1>Chào mừng bạn đến với ShopOnline</h1>
-            <p>Tìm kiếm cửa hàng và sản phẩm yêu thích của bạn!</p>
-            <input type="text" class="form-control w-50 mx-auto" placeholder="Tìm kiếm cửa hàng hoặc sản phẩm...">
-        </div>
-    </div>
-
-    <!-- Danh mục sản phẩm -->
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Danh mục sản phẩm</h2>
-        <div class="row text-center">
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="card category-card bg-primary text-white p-3">
-                    <i class="fas fa-tshirt"></i>
-                    <div>Thời trang</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="card category-card bg-success text-white p-3">
-                    <i class="fas fa-tv"></i>
-                    <div>Điện tử</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="card category-card bg-warning text-dark p-3">
-                    <i class="fas fa-blender"></i>
-                    <div>Gia dụng</div>
-                </div>
-            </div>
-            <div class="col-md-3 col-sm-6 mb-3">
-                <div class="card category-card bg-danger text-white p-3">
-                    <i class="fas fa-magic"></i>
-                    <div>Mỹ phẩm</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <h1 class="animate-fade-in-up">Chào mừng đến với ShopOnline</h1>
+                    <p class="animate-fade-in-up delay-1">Khám phá hàng nghìn sản phẩm từ các cửa hàng uy tín trên toàn
+                        quốc</p>
+                    <div class="search-container animate-fade-in-up delay-2">
+                        <input type="text" class="form-control search-input"
+                            placeholder="Tìm kiếm sản phẩm, cửa hàng...">
+                        <button class="search-btn">
+                            <i class="fas fa-search me-1"></i> Tìm kiếm
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Sản phẩm gợi ý -->
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Sản phẩm gợi ý</h2>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 1">
-                    <h5 class="mt-2">Sản phẩm 1</h5>
-                    <p>Giá: 200.000 VNĐ</p>
+    <!-- Categories -->
+    <section class="category-container">
+        <div class="container">
+            <h2 class="section-title">Khám phá theo danh mục</h2>
+            <div class="row">
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up">
+                    <div class="category-card fashion">
+                        <i class="fas fa-tshirt"></i>
+                        <h5 class="category-title">Thời trang</h5>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 2">
-                    <h5 class="mt-2">Sản phẩm 2</h5>
-                    <p>Giá: 350.000 VNĐ</p>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up delay-1">
+                    <div class="category-card electronics">
+                        <i class="fas fa-laptop"></i>
+                        <h5 class="category-title">Điện tử</h5>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 3">
-                    <h5 class="mt-2">Sản phẩm 3</h5>
-                    <p>Giá: 500.000 VNĐ</p>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up delay-2">
+                    <div class="category-card home">
+                        <i class="fas fa-home"></i>
+                        <h5 class="category-title">Gia dụng</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up delay-3">
+                    <div class="category-card beauty">
+                        <i class="fas fa-magic"></i>
+                        <h5 class="category-title">Mỹ phẩm</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up">
+                    <div class="category-card sports">
+                        <i class="fas fa-running"></i>
+                        <h5 class="category-title">Thể thao</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up delay-1">
+                    <div class="category-card kids">
+                        <i class="fas fa-baby"></i>
+                        <h5 class="category-title">Trẻ em</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up delay-2">
+                    <div class="category-card books">
+                        <i class="fas fa-book"></i>
+                        <h5 class="category-title">Sách</h5>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4 animate-fade-in-up delay-3">
+                    <div class="category-card food">
+                        <i class="fas fa-utensils"></i>
+                        <h5 class="category-title">Thực phẩm</h5>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!--Sản phẩm mua nhiều-->
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Sản phẩm mua nhiều</h2>
-        <div class="row">
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 4">
-                    <h5 class="mt-2">Sản phẩm 4</h5>
-                    <p>Giá: 150.000 VNĐ</p>
-                </div>
+    <!-- Featured Products -->
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Sản phẩm nổi bật</h2>
+                <a href="#" class="see-all">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 5">
-                    <h5 class="mt-2">Sản phẩm 5</h5>
-                    <p>Giá: 250.000 VNĐ</p>
+            <div class="row">
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 1">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng ABC
+                            </div>
+                            <h5 class="product-title">Áo sơ mi nam cao cấp</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">(120)</span>
+                            </div>
+                            <div class="product-price">350.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 6">
-                    <h5 class="mt-2">Sản phẩm 6</h5>
-                    <p>Giá: 400.000 VNĐ</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 7">
-                    <h5 class="mt-2">Sản phẩm 7</h5>
-                    <p>Giá: 300.000 VNĐ</p>
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-15%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 4">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng UVW
+                            </div>
+                            <h5 class="product-title">Giày thể thao chạy bộ</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">(58)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">850.000₫</span>
+                                720.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!--Sản phẩm đang được khuyến mại nhiều-->
-    <div class="container mt-4">
-        <h2 class="text-center mb-4">Sản phẩm đang được khuyến mại nhiều</h2>
-        <div class="row">
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 8">
-                    <h5 class="mt-2">Sản phẩm 8</h5>
-                    <p>Giá: 100.000 VNĐ</p>
+    <!-- Featured Stores -->
+    <section class="store-section">
+        <div class="container">
+            <h2 class="section-title">Cửa hàng nổi bật</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="store-card">
+                        <div class="store-img">
+                            <img src="/api/placeholder/400/200" alt="Cửa hàng 1">
+                        </div>
+                        <div class="store-body">
+                            <h5 class="store-title">Fashion Elite</h5>
+                            <div class="store-meta">
+                                <p><i class="fas fa-map-marker-alt"></i> 123 Đường Lê Lợi, Quận 1, TP. HCM</p>
+                                <p><i class="fas fa-tags"></i> Thời trang, Phụ kiện</p>
+                            </div>
+                            <div class="store-rating">
+                                <span class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </span>
+                                <span class="count">4.5 (120 đánh giá)</span>
+                            </div>
+                            <a href="#" class="btn btn-store">
+                                <i class="fas fa-store me-1"></i> Ghé thăm cửa hàng
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 9">
-                    <h5 class="mt-2">Sản phẩm 9</h5>
-                    <p>Giá: 200.000 VNĐ</p>
+                <div class="col-md-4 mb-4">
+                    <div class="store-card">
+                        <div class="store-img">
+                            <img src="/api/placeholder/400/200" alt="Cửa hàng 2">
+                        </div>
+                        <div class="store-body">
+                            <h5 class="store-title">Tech World</h5>
+                            <div class="store-meta">
+                                <p><i class="fas fa-map-marker-alt"></i> 456 Đường Nguyễn Huệ, Quận 3, TP. HCM</p>
+                                <p><i class="fas fa-tags"></i> Điện tử, Công nghệ</p>
+                            </div>
+                            <div class="store-rating">
+                                <span class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </span>
+                                <span class="count">5.0 (85 đánh giá)</span>
+                            </div>
+                            <a href="#" class="btn btn-store">
+                                <i class="fas fa-store me-1"></i> Ghé thăm cửa hàng
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 10">
-                    <h5 class="mt-2">Sản phẩm 10</h5>
-                    <p>Giá: 300.000 VNĐ</p>
-                </div>
-            </div>
-            <div class="col-6 col-md-4 col-lg-3 mb-3">
-                <div class="card product-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Sản phẩm 11">
-                    <h5 class="mt-2">Sản phẩm 11</h5>
-                    <p>Giá: 400.000 VNĐ</p>
+                <div class="col-md-4 mb-4">
+                    <div class="store-card">
+                        <div class="store-img">
+                            <img src="/api/placeholder/400/200" alt="Cửa hàng 3">
+                        </div>
+                        <div class="store-body">
+                            <h5 class="store-title">Home Essentials</h5>
+                            <div class="store-meta">
+                                <p><i class="fas fa-map-marker-alt"></i> 789 Đường Trần Hưng Đạo, Quận 5, TP. HCM</p>
+                                <p><i class="fas fa-tags"></i> Nội thất, Gia dụng</p>
+                            </div>
+                            <div class="store-rating">
+                                <span class="stars">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </span>
+                                <span class="count">4.0 (63 đánh giá)</span>
+                            </div>
+                            <a href="#" class="btn btn-store">
+                                <i class="fas fa-store me-1"></i> Ghé thăm cửa hàng
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="container mt-4">
-        <h2 class="text-center mb-4 section-title">Cửa hàng nổi bật</h2>
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <div class="card store-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Cửa hàng 1">
-                    <h5 class="mt-2">Cửa hàng 1</h5>
-                    <p>Địa chỉ: 123 Đường ABC, Quận XYZ</p>
-                </div>
+    <!-- CTA Banner -->
+    <section class="cta-banner">
+        <div class="container">
+            <h2>Đăng ký cửa hàng của bạn ngay hôm nay</h2>
+            <p>Mở rộng kinh doanh và tiếp cận hàng triệu khách hàng tiềm năng trên nền tảng ShopOnline</p>
+            <a href="#" class="btn btn-cta">
+                <i class="fas fa-store me-1"></i> Đăng ký cửa hàng
+            </a>
+        </div>
+    </section>
+
+    <!-- Best Selling Products -->
+    <section class="best-selling-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Sản phẩm bán chạy</h2>
+                <a href="#" class="see-all">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
             </div>
-            <div class="col-md-4 mb-3">
-                <div class="card store-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Cửa hàng 2">
-                    <h5 class="mt-2">Cửa hàng 2</h5>
-                    <p>Địa chỉ: 456 Đường DEF, Quận UVW</p>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 5">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng LMN
+                            </div>
+                            <h5 class="product-title">Điện thoại thông minh XYZ</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-1">(310)</span>
+                            </div>
+                            <div class="product-price">4.500.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card store-card p-3">
-                    <img src="https://via.placeholder.com/300" alt="Cửa hàng 3">
-                    <h5 class="mt-2">Cửa hàng 3</h5>
-                    <p>Địa chỉ: 789 Đường GHI, Quận RST</p>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 6">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng RST
+                            </div>
+                            <h5 class="product-title">Nồi cơm điện cao cấp</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <span class="ms-1">(275)</span>
+                            </div>
+                            <div class="product-price">1.250.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 7">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng GHJ
+                            </div>
+                            <h5 class="product-title">Sữa rửa mặt dưỡng ẩm</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">(198)</span>
+                            </div>
+                            <div class="product-price">220.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 8">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng MNO
+                            </div>
+                            <h5 class="product-title">Bộ chăn ga gối cao cấp</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">(145)</span>
+                            </div>
+                            <div class="product-price">950.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
+    <!-- Discount Products -->
+    <section class="discount-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Khuyến mãi hot</h2>
+                <a href="#" class="see-all">Xem tất cả <i class="fas fa-arrow-right ms-1"></i></a>
+            </div>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-30%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 9">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng PQR
+                            </div>
+                            <h5 class="product-title">Loa bluetooth không dây</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">(87)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">500.000₫</span>
+                                350.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-25%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 10">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng STU
+                            </div>
+                            <h5 class="product-title">Balo du lịch chống nước</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">(112)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">400.000₫</span>
+                                300.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-40%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 11">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng VWX
+                            </div>
+                            <h5 class="product-title">Nồi chiên không dầu</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <span class="ms-1">(247)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">1.500.000₫</span>
+                                900.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-15%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Sản phẩm 12">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> Cửa hàng YZA
+                            </div>
+                            <h5 class="product-title">Bộ dụng cụ trang điểm</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="far fa-star"></i>
+                                <span class="ms-1">(95)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">250.000₫</span>
+                                212.500₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
-    <!-- <footer class="footer text-white text-center py-4 mt-4">
+    <footer class="footer">
         <div class="container">
-            <p>&copy; 2025 ShopOnline. All rights reserved.</p>
-            <div>
-                <a href="#" class="text-white me-3">Chính sách bảo mật</a>
-                <a href="#" class="text-white">Điều khoản sử dụng</a>
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">ShopOnline</h5>
+                    <p class="text-white-50">Sàn thương mại điện tử hàng đầu kết nối người mua và người bán trên toàn
+                        quốc.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Liên kết nhanh</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Trang chủ</a></li>
+                        <li><a href="#">Danh mục sản phẩm</a></li>
+                        <li><a href="#">Cửa hàng nổi bật</a></li>
+                        <li><a href="#">Khuyến mãi hot</a></li>
+                        <li><a href="#">Đăng ký cửa hàng</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Hỗ trợ khách hàng</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Chính sách đổi trả</a></li>
+                        <li><a href="#">Chính sách bảo mật</a></li>
+                        <li><a href="#">Điều khoản dịch vụ</a></li>
+                        <li><a href="#">Câu hỏi thường gặp</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Liên hệ</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP. HCM</li>
+                        <li><i class="fas fa-phone"></i> (028) 3456 7890</li>
+                        <li><i class="fas fa-envelope"></i> info@shoponline.vn</li>
+                    </ul>
+                    <div class="newsletter">
+                        <p>Đăng ký để nhận thông tin mới nhất</p>
+                        <div class="newsletter-form">
+                            <input type="email" class="newsletter-input" placeholder="Email của bạn">
+                            <button class="newsletter-btn"><i class="fas fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </footer> -->
-    <!-- Remove the container if you want to extend the Footer to full width. -->
-    <div class="container my-5">
-        <!-- Footer -->
-        <footer class="text-center text-lg-start text-dark" style="background-color: #ECEFF1">
-            <!-- Section: Social media -->
-            <section class="d-flex justify-content-between p-4 text-white" style="background-color: #21D192">
-                <!-- Left -->
-                <div class="me-5">
-                    <span>Get connected with us on social networks:</span>
-                </div>
-                <!-- Left -->
-
-                <!-- Right -->
-                <div>
-                    <a href="" class="text-white me-4">
-                        <i class="fab fa-facebook-f"></i>
-                    </a>
-                    <a href="" class="text-white me-4">
-                        <i class="fab fa-twitter"></i>
-                    </a>
-                    <a href="" class="text-white me-4">
-                        <i class="fab fa-google"></i>
-                    </a>
-                    <a href="" class="text-white me-4">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-                    <a href="" class="text-white me-4">
-                        <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="" class="text-white me-4">
-                        <i class="fab fa-github"></i>
-                    </a>
-                </div>
-                <!-- Right -->
-            </section>
-            <!-- Section: Social media -->
-
-            <!-- Section: Links  -->
-            <section class="">
-                <div class="container text-center text-md-start mt-5">
-                    <!-- Grid row -->
-                    <div class="row mt-3">
-                        <!-- Grid column -->
-                        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
-                            <!-- Content -->
-                            <h6 class="text-uppercase fw-bold">Company name</h6>
-                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
-                                style="width: 60px; background-color: #7c4dff; height: 2px" />
-                            <p>
-                                Here you can use rows and columns to organize your footer
-                                content. Lorem ipsum dolor sit amet, consectetur adipisicing
-                                elit.
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
-                            <!-- Links -->
-                            <h6 class="text-uppercase fw-bold">Products</h6>
-                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
-                                style="width: 60px; background-color: #7c4dff; height: 2px" />
-                            <p>
-                                <a href="#!" class="text-dark">MDBootstrap</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-dark">MDWordPress</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-dark">BrandFlow</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-dark">Bootstrap Angular</a>
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
-                            <!-- Links -->
-                            <h6 class="text-uppercase fw-bold">Useful links</h6>
-                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
-                                style="width: 60px; background-color: #7c4dff; height: 2px" />
-                            <p>
-                                <a href="#!" class="text-dark">Your Account</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-dark">Become an Affiliate</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-dark">Shipping Rates</a>
-                            </p>
-                            <p>
-                                <a href="#!" class="text-dark">Help</a>
-                            </p>
-                        </div>
-                        <!-- Grid column -->
-
-                        <!-- Grid column -->
-                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
-                            <!-- Links -->
-                            <h6 class="text-uppercase fw-bold">Contact</h6>
-                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
-                                style="width: 60px; background-color: #7c4dff; height: 2px" />
-                            <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
-                            <p><i class="fas fa-envelope mr-3"></i> info@example.com</p>
-                            <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
-                            <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
-                        </div>
-                        <!-- Grid column -->
-                    </div>
-                    <!-- Grid row -->
-                </div>
-            </section>
-            <!-- Section: Links  -->
-
-            <!-- Copyright -->
-            <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-                © 2020 Copyright:
-                <a class="text-dark" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="m-0">© 2025 ShopOnline. Tất cả quyền được bảo lưu. | Thiết kế bởi <a href="#">YourCompany</a>
+                </p>
             </div>
-            <!-- Copyright -->
-        </footer>
-        <!-- Footer -->
-    </div>
-    <!-- End of .container -->
+        </div>
+    </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Hàm lấy danh sách sản phẩm nổi bật
+        function fetchFeaturedProducts() {
+            fetch('/api/featured-products', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không thể tải danh sách sản phẩm nổi bật');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    renderFeaturedProducts(products);
+                })
+                .catch(error => {
+                    console.error('Error fetching featured products:', error);
+                    // Hiển thị thông báo lỗi trên giao diện (tùy chọn)
+                    const featuredSection = document.querySelector('.featured-section .row');
+                    featuredSection.innerHTML = '<p class="text-danger text-center">Không thể tải sản phẩm nổi bật. Vui lòng thử lại sau.</p>';
+                });
+        }
+
+        // Hàm lấy danh sách shop nổi bật
+        function fetchFeaturedStores() {
+            fetch('/api/featured-stores', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không thể tải danh sách cửa hàng nổi bật');
+                    }
+                    console.log(response);
+                    return response.json();
+                })
+                .then(stores => {
+                    renderFeaturedStores(stores);
+                })
+                .catch(error => {
+                    console.error('Error fetching featured stores:', error);
+                    // Hiển thị thông báo lỗi trên giao diện (tùy chọn)
+                    const storeSection = document.querySelector('.store-section .row');
+                    storeSection.innerHTML = '<p class="text-danger text-center">Không thể tải cửa hàng nổi bật. Vui lòng thử lại sau.</p>';
+                });
+        }
+
+        // Hàm lấy sản phẩm best-seller
+        function fetchBestSellingProducts() {
+            fetch('/api/best-selling-products', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không thể tải danh sách sản phẩm bán chạy');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    renderBestSellingProducts(products);
+                })
+                .catch(error => {
+                    console.error('Error fetching best selling products:', error);
+                    // Hiển thị thông báo lỗi trên giao diện (tùy chọn)
+                    const bestSellingSection = document.querySelector('.best-selling-section .row');
+                    bestSellingSection.innerHTML = '<p class="text-danger text-center">Không thể tải sản phẩm bán chạy. Vui lòng thử lại sau.</p>';
+                });
+        }
+
+        // Hàm lấy danh sách các sản phẩm có giá khuyến mãi
+        function fetchDiscountProducts() {
+            fetch('/api/discount-products', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không thể tải danh sách sản phẩm khuyến mãi');
+                    }
+                    return response.json();
+                })
+                .then(products => {
+                    renderDiscountProducts(products);
+                })
+                .catch(error => {
+                    console.error('Error fetching discount products:', error);
+                    // Hiển thị thông báo lỗi trên giao diện (tùy chọn)
+                    const discountSection = document.querySelector('.discount-section .row');
+                    discountSection.innerHTML = '<p class="text-danger text-center">Không thể tải sản phẩm khuyến mãi. Vui lòng thử lại sau.</p>';
+                });
+        }
+
+        // Hàm render sản phẩm nổi bật lên giao diện
+        function renderFeaturedProducts(products) {
+            const featuredSection = document.querySelector('.featured-section .row');
+            featuredSection.innerHTML = ''; // Xóa nội dung hard-code hiện tại
+
+            products.forEach(product => {
+                // Tính giá sau khi giảm giá (nếu có)
+                // const discountedPrice = product.discount > 0
+                //     ? product.price * (1 - product.discount)
+                //     : product.price;
+                const discountedPrice = product.sellCost;
+                // Tạo HTML cho rating stars
+                const ratingStars = generateRatingStars(5);
+
+                // Tạo HTML cho sản phẩm
+                const productCard = `
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
+                        <div class="product-img">
+                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> ${product.shopName}
+                            </div>
+                            <h5 class="product-title">${product.productName}</h5>
+                            <div class="rating">
+                                ${ratingStars}
+                                <span class="ms-1">(${product.viewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                ${product.discount > 0
+                        ? `<span class="text-decoration-line-through text-muted me-2">${formatPrice(product.cost)}₫</span>${formatPrice(discountedPrice)}₫`
+                        : `${formatPrice(product.cost)}₫`}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2" onclick="addToCart(${product.productID})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist" onclick="addToWishlist(${product.productID})">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                featuredSection.insertAdjacentHTML('beforeend', productCard);
+            });
+        }
+
+        // Hàm render cửa hàng nổi bật lên giao diện
+        function renderFeaturedStores(stores) {
+            const storeSection = document.querySelector('.store-section .row');
+            storeSection.innerHTML = ''; // Xóa nội dung hard-code hiện tại
+
+            stores.forEach(store => {
+                // Tạo HTML cho cửa hàng
+                const storeCard = `
+                <div class="col-md-4 mb-4">
+                    <div class="store-card">
+                        <div class="store-img">
+                            <img src="${store.linkImg || '/api/placeholder/400/200'}" alt="${store.shopName}">
+                        </div>
+                        <div class="store-body">
+                            <h5 class="store-title">${store.shopName}</h5>
+                            <div class="store-meta">
+                                <p><i class="fas fa-map-marker-alt"></i> ${store.description}</p>
+                                <p><i class="fas fa-tags"></i> ${store.typeofbussiness}</p>
+                            </div>
+                            <div class="store-rating">
+                                <span class="stars">
+                                    ${generateRatingStars(store.averageAssess)}
+                                </span>
+                                <span class="count">${store.averageAssess} (${10} đánh giá)</span>
+                            </div>
+                            <a href="#" class="btn btn-store">
+                                <i class="fas fa-store me-1"></i> Ghé thăm cửa hàng
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            `;
+                storeSection.insertAdjacentHTML('beforeend', storeCard);
+            });
+        }
+
+        // Hàm render sản phẩm bán chạy lên giao diện
+        function renderBestSellingProducts(products) {
+            const featuredSection = document.querySelector('.best-selling-section .row');
+            featuredSection.innerHTML = ''; // Xóa nội dung hard-code hiện tại
+
+            products.forEach(product => {
+                // Tính giá sau khi giảm giá (nếu có)
+                // const discountedPrice = product.discount > 0
+                //     ? product.price * (1 - product.discount)
+                //     : product.price;
+                const discountedPrice = product.sellCost;
+                // Tạo HTML cho rating stars
+                const ratingStars = generateRatingStars(5);
+
+                // Tạo HTML cho sản phẩm
+                const productCard = `
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
+                        <div class="product-img">
+                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> ${product.shopName}
+                            </div>
+                            <h5 class="product-title">${product.productName}</h5>
+                            <div class="rating">
+                                ${ratingStars}
+                                <span class="ms-1">(${product.viewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                ${product.discount > 0
+                        ? `<span class="text-decoration-line-through text-muted me-2">${formatPrice(product.cost)}₫</span>${formatPrice(discountedPrice)}₫`
+                        : `${formatPrice(product.cost)}₫`}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2" onclick="addToCart(${product.productID})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist" onclick="addToWishlist(${product.productID})">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                featuredSection.insertAdjacentHTML('beforeend', productCard);
+            });
+        }
+
+        // Hàm render sản phẩm khuyến mãi lên giao diện
+        function renderDiscountProducts(products) {
+            const featuredSection = document.querySelector('.discount-section .row');
+            featuredSection.innerHTML = ''; // Xóa nội dung hard-code hiện tại
+
+            products.forEach(product => {
+                // Tính giá sau khi giảm giá (nếu có)
+                // const discountedPrice = product.discount > 0
+                //     ? product.price * (1 - product.discount)
+                //     : product.price;
+                const discountedPrice = product.sellCost;
+                // Tạo HTML cho rating stars
+                const ratingStars = generateRatingStars(5);
+
+                // Tạo HTML cho sản phẩm
+                const productCard = `
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
+                        <div class="product-img">
+                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> ${product.shopName}
+                            </div>
+                            <h5 class="product-title">${product.productName}</h5>
+                            <div class="rating">
+                                ${ratingStars}
+                                <span class="ms-1">(${product.viewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                ${product.discount > 0
+                        ? `<span class="text-decoration-line-through text-muted me-2">${formatPrice(product.cost)}₫</span>${formatPrice(discountedPrice)}₫`
+                        : `${formatPrice(product.cost)}₫`}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2" onclick="addToCart(${product.productID})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist" onclick="addToWishlist(${product.productID})">
+                                    <i class="far fa-heart"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+                featuredSection.insertAdjacentHTML('beforeend', productCard);
+            });
+        }
+    
+        // Hàm tạo HTML cho rating stars
+        function generateRatingStars(rating) {
+            let stars = '';
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+
+            // Thêm full stars
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            // Thêm half star (nếu có)
+            if (hasHalfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            // Thêm empty stars (nếu cần)
+            const remainingStars = 5 - Math.ceil(rating);
+            for (let i = 0; i < remainingStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            return stars;
+        }
+
+        // Hàm định dạng giá tiền
+        function formatPrice(price) {
+            return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        // Hàm xử lý thêm vào giỏ hàng (placeholder)
+        window.addToCart = function (productId) {
+            alert(`Đã thêm sản phẩm có ID ${productId} vào giỏ hàng!`);
+            // Thêm logic gọi API để thêm sản phẩm vào giỏ hàng
+        };
+
+        // Hàm xử lý thêm vào danh sách yêu thích (placeholder)
+        window.addToWishlist = function (productId) {
+            alert(`Đã thêm sản phẩm có ID ${productId} vào danh sách yêu thích!`);
+            // Thêm logic gọi API để thêm sản phẩm vào danh sách yêu thích
+        };
+
+        // Gọi hàm để lấy dữ liệu khi trang tải
+        fetchFeaturedProducts();
+        fetchFeaturedStores();
+        fetchBestSellingProducts();
+        fetchDiscountProducts();
+    });
+</script>
 
 </html>

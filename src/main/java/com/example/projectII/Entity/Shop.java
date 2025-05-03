@@ -30,4 +30,7 @@ public class Shop {
 
     @Column(name = "averageassess")
     private double averageAssess;
+
+    @Column(name = "typeofbusiness")
+    private String typeOfBusiness;
 }

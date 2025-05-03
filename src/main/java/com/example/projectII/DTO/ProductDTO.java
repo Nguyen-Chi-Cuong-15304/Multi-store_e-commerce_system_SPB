@@ -26,4 +26,13 @@ public class ProductDTO {
     @Nullable
     private int purchaseNumber = 0; // Initialize purchase number to 0
 
+    @Nullable
+    private String linkImg;
+
+    @Nullable
+    private double discount;
+
+    @Nullable
+    private String shopName;
+
 }

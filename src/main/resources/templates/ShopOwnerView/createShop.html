@@ -180,6 +180,23 @@
                         </div>
 
                         <div class="mb-3">
+                            <label for="typeofbussiness" class="form-label">
+                                <i class="fas fa-comment-dots"></i> Loại mặt hàng kinh doanh
+                            </label>
+                            <select class="form-select" id="typeofbussiness" name="typeofbussiness" required>
+                                <option value="">Chọn loại mặt hàng</option>
+                                <option value="food">Thực phẩm</option>
+                                <option value="clothing">Thời trang</option>
+                                <option value="electronics">Điện tử</option>
+                                <option value="furniture">Gia dụng</option>
+                                <option value="toys">Mỹ phẩm</option>
+                                <option value="books">Sách</option>
+                                <option value="sports">Thể thao</option>
+                                <option value="children">Trẻ em</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
                             <label for="description" class="form-label">
                                 <i class="fas fa-comment-dots"></i> Mô Tả Cửa Hàng
                             </label>
@@ -219,8 +236,9 @@
             const shopName = document.getElementById('shopName').value;
             const status = document.getElementById('status').value;
             const shopOwnerId = document.getElementById('shopOwnerId').value;
+            const typeOfBusiness = document.getElementById('typeofbussiness').value;
 
-            if (!shopName || !status || !shopOwnerId) {
+            if (!shopName || !status || !shopOwnerId || !typeOfBusiness) {
                 alert('Vui lòng điền đầy đủ thông tin bắt buộc');
                 return;
             }

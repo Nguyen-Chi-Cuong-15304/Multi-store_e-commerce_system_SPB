@@ -3,6 +3,7 @@ package com.example.projectII.Service;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class ShopService {
         shop.setShopOwner(shopOwner);
         shop.setStatus(shopDTO.getStatus());
         shop.setAverageAssess(0);
+        shop.setTypeOfBusiness(shopDTO.getTypeofbussiness());
         if(shopDTO.getBackgroundImage() != null) {
             String image = shopDTO.getBackgroundImage().getOriginalFilename();
             String path = "src/main/resources/static/Image/ShopBG/";
@@ -83,5 +85,31 @@ public class ShopService {
 
     public ShopCategory getCategoryByID(int categoryID) {
         return shopCategoryRepository.findById(categoryID).orElse(null);
+    }
+
+
+
+    public List<ShopDTO> getFeaturedStores() {
+        // Lấy danh sách cửa hàng mới nhất
+        try {
+            List<Shop> shops = shopRepository.findTop6ByOrderByAverageAssessDesc();
+            List<ShopDTO> shopDTOs = new ArrayList<>();
+            for (Shop shop : shops) {
+                ShopDTO shopDTO = new ShopDTO();
+                shopDTO.setShopID(shop.getShopID());
+                shopDTO.setShopName(shop.getShopName());
+                shopDTO.setDescription(shop.getDescription());
+                shopDTO.setStatus(shop.getStatus());
+                shopDTO.setAverageAssess(shop.getAverageAssess());
+                shopDTO.setTypeofbussiness(shop.getTypeOfBusiness());
+                shopDTO.setLinkImg(shop.getBackgroundImage());
+                shopDTO.setTypeofbussiness(shop.getTypeOfBusiness());
+                shopDTOs.add(shopDTO);
+            }
+            return shopDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }
