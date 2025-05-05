@@ -33,7 +33,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/all/cart">
+                        <a class="nav-link" href="/api/cart">
                             <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
                         </a>
                     </li>
@@ -980,7 +980,29 @@
 
         // Hàm xử lý thêm vào giỏ hàng (placeholder)
         window.addToCart = function (productId) {
-            alert(`Đã thêm sản phẩm có ID ${productId} vào giỏ hàng!`);
+            // Gửi thông tin sản phẩm đến API để thêm vào giỏ hàng
+            formData = new FormData();
+            formData.append('productID', productId);
+            var quantity = 1; // Số lượng sản phẩm mặc định là 1
+            formData.append('quantity', quantity);
+            fetch('/cart/add_to_cart', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Không thể thêm sản phẩm vào giỏ hàng');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Sản phẩm đã được thêm vào giỏ hàng:', data);
+                    alert(`Đã thêm sản phẩm có ID ${productId} vào giỏ hàng!`);
+                })
+                .catch(error => {
+                    console.error('Error adding product to cart:', error);
+                });
+            
             // Thêm logic gọi API để thêm sản phẩm vào giỏ hàng
         };
 

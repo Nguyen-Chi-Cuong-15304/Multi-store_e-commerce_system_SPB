@@ -8,17 +8,26 @@ import lombok.Data;
 @Data
 public class ProductDTO {
     private int productID;
+    @Nullable
     private String productName;
+    @Nullable
     private int shopID;
+    @Nullable
     private int categoryID;
+    @Nullable
     private double cost;
+    @Nullable
     private double sellCost;
+    @Nullable
     private String description;
 
     @Nullable
     private MultipartFile image;   
+    @Nullable
     private int quantityInStock;
+    @Nullable
     private int viewCount;
+    @Nullable
     private double inputCost;
     @Nullable
     private String status;

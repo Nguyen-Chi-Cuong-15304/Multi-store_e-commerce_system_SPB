@@ -57,6 +57,11 @@ public class PageControllerUser {
             return ResponseEntity.status(500).body("Error fetching discount products: " + e.getMessage());
         }
     }
+
+    @GetMapping("/cart")
+    public String getCartPage() {
+        return "shoppingcartv2"; // Trả về tên trang cart.html
+    }
     
     
 }
