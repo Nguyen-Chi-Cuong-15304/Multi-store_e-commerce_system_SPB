@@ -112,4 +112,29 @@ public class ShopService {
             return null;
         }
     }
+
+
+
+    public ShopDTO getShopById(int shopId) {
+        // Lấy thông tin cửa hàng theo ID
+        try {
+            Shop shop = shopRepository.findById(shopId).orElse(null);
+            if (shop != null) {
+                ShopDTO shopDTO = new ShopDTO();
+                shopDTO.setShopID(shop.getShopID());
+                shopDTO.setShopName(shop.getShopName());
+                shopDTO.setDescription(shop.getDescription());
+                shopDTO.setStatus(shop.getStatus());
+                shopDTO.setAverageAssess(shop.getAverageAssess());
+                shopDTO.setTypeofbussiness(shop.getTypeOfBusiness());
+                shopDTO.setLinkImg(shop.getBackgroundImage());
+                return shopDTO;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

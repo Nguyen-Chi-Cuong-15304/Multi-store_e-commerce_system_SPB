@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.projectII.DTO.ProductDTO;
@@ -256,6 +259,7 @@ public class ProductService {
             }
             productDTO.setDiscount(discount); // Add discount to DTO
             productDTO.setShopName(product.getShop().getShopName()); // Add shop name to DTO
+            productDTO.setShopID(product.getShop().getShopID()); // Add shop ID to DTO
             
             // Add other properties as needed
             
@@ -264,4 +268,116 @@ public class ProductService {
         return productDTOs;
         
     }
+
+    public List<ProductDTO> getNewProductsByShopId(int shopID) {
+        // lấy top 6 sản phẩm mới nhất
+        List<Product> products = productRepository.findTop6ByShop_ShopIDOrderByProductIDDesc(shopID);
+        if (products == null || products.isEmpty()) {
+            System.out.println("No new products found for shop ID: " + shopID);
+            return null; // or throw an exception
+        } else {
+            System.out.println("New products found for shop ID " + shopID + ": " + products.size());
+        }
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductID(product.getProductID());
+            productDTO.setProductName(product.getProductName());
+            productDTO.setCost(product.getCost());
+            productDTO.setSellCost(product.getSellCost());
+            
+            productDTO.setViewCount(product.getViewCount());
+            productDTO.setInputCost(product.getInputPrice());
+            productDTO.setLinkImg(product.getImage()); // Add image link to DTO
+            productDTO.setPurchaseNumber(product.getPurchaseNumber()); // Add purchase number to DTO
+
+            double discount = 0.0;
+            if (product.getCost() > 0) {
+                discount = ((product.getCost() - product.getSellCost()) / product.getCost()) * 100;
+            }
+            productDTO.setDiscount(discount); // Add discount to DTO
+            productDTO.setShopName(product.getShop().getShopName()); // Add shop name to DTO
+            
+            // Add other properties as needed
+            
+            productDTOs.add(productDTO);
+        }
+        return productDTOs;
+        
+    }
+
+    public List<ProductDTO> getDiscountProductsByShopId(int shopID) {
+        // lấy top 6 sản phẩm có discount nhiều nhất
+        List<Product> products = productRepository.findTop10ByShop_ShopIDOrderByDiscountDesc(shopID);
+        if (products == null || products.isEmpty()) {
+            System.out.println("No discount products found for shop ID: " + shopID);
+            return null; // or throw an exception
+        } else {
+            System.out.println("Discount products found for shop ID " + shopID + ": " + products.size());
+        }
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductID(product.getProductID());
+            productDTO.setProductName(product.getProductName());
+            productDTO.setCost(product.getCost());
+            productDTO.setSellCost(product.getSellCost());
+            
+            productDTO.setViewCount(product.getViewCount());
+            productDTO.setInputCost(product.getInputPrice());
+            productDTO.setLinkImg(product.getImage()); // Add image link to DTO
+            productDTO.setPurchaseNumber(product.getPurchaseNumber()); // Add purchase number to DTO
+            productDTO.setShopName(product.getShop().getShopName()); // Add shop name to DTO
+
+            double discount = 0.0;
+            if (product.getCost() > 0) {
+                discount = ((product.getCost() - product.getSellCost()) / product.getCost()) * 100;
+            }
+            productDTO.setDiscount(discount); // Add discount to DTO
+            
+            // Add other properties as needed
+            
+            productDTOs.add(productDTO);
+        }
+        return productDTOs;
+        
+    }
+
+    public Page<ProductDTO> getAllProductsByShopId(int shopID, Pageable pageable) {
+        // lấy tất cả sản phẩm của shop theo phân trang
+        Page<Product> products = productRepository.findByShop(shopRepository.findById(shopID).orElse(null), pageable);
+        if (products == null || products.isEmpty()) {
+            System.out.println("No products found for shop ID: " + shopID);
+            return null; // or throw an exception
+        } else {
+            System.out.println("Products found for shop ID " + shopID + ": " + products.getTotalElements());
+        }
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductID(product.getProductID());
+            productDTO.setProductName(product.getProductName());
+            productDTO.setCost(product.getCost());
+            productDTO.setSellCost(product.getSellCost());
+            
+            productDTO.setViewCount(product.getViewCount());
+            productDTO.setInputCost(product.getInputPrice());
+            productDTO.setLinkImg(product.getImage()); // Add image link to DTO
+            productDTO.setPurchaseNumber(product.getPurchaseNumber()); // Add purchase number to DTO
+            productDTO.setShopName(product.getShop().getShopName()); // Add shop name to DTO
+
+            double discount = 0.0;
+            if (product.getCost() > 0) {
+                discount = ((product.getCost() - product.getSellCost()) / product.getCost()) * 100;
+            }
+            productDTO.setDiscount(discount); // Add discount to DTO
+            
+            // Add other properties as needed
+            
+            productDTOs.add(productDTO);
+        }
+        return new PageImpl<>(productDTOs, pageable, products.getTotalElements());
+    }
+
+    
 }

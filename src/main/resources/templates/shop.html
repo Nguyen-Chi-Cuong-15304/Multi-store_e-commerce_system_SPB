@@ -1,671 +1,1022 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TechWorld Store - ShopOnline</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .icon-hover:hover {
-            border-color: #3b71ca !important;
-            background-color: white !important;
-        }
-
-        .icon-hover:hover i {
-            color: #3b71ca !important;
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            /* Khoảng cách giữa các nút */
-            align-items: center;
-        }
-
-        .wishlist-btn {
-            border: none;
-            background: none;
-            font-size: 1.5rem;
-            color: #dc3545;
-            /* Màu đỏ cho trái tim */
-            cursor: pointer;
-        }
-
-        .wishlist-btn:hover {
-            color: #ff6b6b;
-            /* Màu sáng hơn khi hover */
-        }
-    </style>
+    
+    <link rel="stylesheet" href="/CSS/homepage.css">
 </head>
 
 <body>
-    <!--Main Navigation-->
-    <header>
-        <!-- Jumbotron -->
-        <div class="p-3 text-center bg-white border-bottom">
-            <div class="container">
-                <div class="row gy-3">
-                    <!-- Left elements -->
-                    <div class="col-lg-2 col-sm-4 col-4">
-                        <a href="https://mdbootstrap.com/" target="_blank" class="float-start">
-                            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-store me-2"></i>ShopOnline
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/all/">
+                            <i class="fas fa-home me-1"></i> Trang chủ
                         </a>
-                    </div>
-                    <!-- Left elements -->
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all/shop">
+                            <i class="fas fa-store me-1"></i> Cửa hàng
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/cart">
+                            <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+                        </a>
+                    </li>
 
-                    <!-- Center elements -->
-                    <div class="order-lg-last col-lg-5 col-sm-8 col-8">
-                        <div class="d-flex float-end">
-                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
-                                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
-                                target="_blank"> <i class="fas fa-user-alt m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Sign in</p>
-                            </a>
-                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
-                                class="me-1 border rounded py-1 px-3 nav-link d-flex align-items-center"
-                                target="_blank"> <i class="fas fa-heart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">Wishlist</p>
-                            </a>
-                            <a href="https://github.com/mdbootstrap/bootstrap-material-design"
-                                class="border rounded py-1 px-3 nav-link d-flex align-items-center" target="_blank"> <i
-                                    class="fas fa-shopping-cart m-1 me-md-2"></i>
-                                <p class="d-none d-md-block mb-0">My cart</p>
-                            </a>
-                        </div>
-                    </div>
-                    <!-- Center elements -->
-
-                    <!-- Right elements -->
-                    <div class="col-lg-5 col-md-12 col-12">
-                        <div class="input-group float-center">
-                            <div class="form-outline">
-                                <input type="search" id="form1" class="form-control" placeholder="Search product" />
-                                <!-- <label class="form-label" for="form1">Search</label> -->
-                            </div>
-                            <button type="button" class="btn btn-primary shadow-0">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Right elements -->
-                </div>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> <span th:text="${fullname}"></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li th:if="${isLoggedIn}"><a class="dropdown-item" href="/all/logout">Đăng xuất</a></li>
+                            <li th:unless="${isLoggedIn}"><a class="dropdown-item" href="/all/login">Đăng nhập</a></li>
+                            <li th:unless="${isLoggedIn}"><a class="dropdown-item" href="/all/register">Đăng ký</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="/all/dashboard">Trang cá nhân</a></li>
+                        </ul>
+                    </li>
+                </ul>
             </div>
         </div>
-        <!-- Jumbotron -->
+    </nav>
 
-        <!-- Navbar -->
-         
-        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-white">
-            
-            <div class="container justify-content-center justify-content-md-between">
-                
-                <button class="navbar-toggler border py-2 text-dark" type="button" data-mdb-toggle="collapse"
-                    data-mdb-target="#navbarLeftAlignExample" aria-controls="navbarLeftAlignExample"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <i class="fas fa-bars"></i>
-                </button>
-
-                
-                <div class="collapse navbar-collapse" id="navbarLeftAlignExample">
-                    
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" aria-current="page" href="#">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Categories</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Hot offers</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Gift boxes</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Projects</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Menu item</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" href="#">Menu name</a>
-                        </li>
-                       
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button"
-                                data-mdb-toggle="dropdown" aria-expanded="false">
-                                Others
-                            </a>
-                           
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <a class="dropdown-item" href="#">Action</a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">Another action</a>
-                                </li>
-                                <li>
-                                    <hr class="dropdown-divider" />
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                    
-                </div>
-            </div>
-            
-        </nav> -->
-        
-        <!-- Navbar -->
-        <!-- Jumbotron -->
-        <div class="bg-primary text-white py-5">
-            <div class="container py-5">
-                <h1>
-                    Best products & <br />
-                    brands in our store
-                </h1>
-                <p>
-                    Trendy Products, Factory Prices, Excellent Service
-                </p>
-                <button type="button" class="btn btn-outline-light">
-                    Learn more
-                </button>
-                <button type="button" class="btn btn-light shadow-0 text-primary pt-2 border border-white">
-                    <span class="pt-1">Purchase now</span>
+    <!-- Hero Section -->
+    <section class="hero">
+        <input type="hidden" id="shopId" name="shopId" th:value="${shopId}">
+        <div class="container">
+            <h1>TechWorld Store</h1>
+            <p>Chuyên cung cấp các sản phẩm công nghệ chính hãng với giá cả cạnh tranh và dịch vụ chăm sóc khách hàng
+                tốt nhất</p>
+            <!-- <div class="search-container">
+                <input type="text" class="form-control search-input" placeholder="Tìm kiếm sản phẩm...">
+                <button class="search-btn"><i class="fas fa-search me-1"></i> Tìm kiếm</button>
+            </div> -->
+            <div class="search-container animate-fade-in-up delay-2">
+                <input type="text" class="form-control search-input"
+                    placeholder="Tìm kiếm sản phẩm, cửa hàng...">
+                <button class="search-btn">
+                    <i class="fas fa-search me-1"></i> Tìm kiếm
                 </button>
             </div>
         </div>
-        <!-- Jumbotron -->
-    </header>
-    <!-- Products -->
-    <section>
-        <div class="container my-5">
-            <div class="row align-items-center">
-                <div class="col-lg-6 col-md-8 col-sm-10">
-                    <header class="mb-0 text-start">
-                        <h3>New products</h3>
-                    </header>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6 ms-auto">
-                    <select class="form-select mb-0">
-                        <option value="1">Sort by</option>
-                        <option value="2">Price</option>
-                        <option value="3">Name</option>
-                        <option value="4">Rating</option>
-                    </select>
-                </div>
-                <div class="col-lg-2 col-md-4 col-sm-6">
-                    <select class="form-select mb-0">
-                        <option value="1">Category</option>
-                        <option value="2">Electronics</option>
-                        <option value="3">Clothes</option>
-                        <option value="4">Shoes</option>
-                    </select>
-                </div>
-            </div>
-            
+    </section>
 
+    <!-- Promotional Products -->
+    <section class="discount-section">
+        <div class="container">
+            <h2 class="section-title">Sản Phẩm Khuyến Mãi</h2>
             <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/1.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">GoPro HERO6 4K Action Camera - Black</h5>
-                            <p class="card-text">$790.50</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-20%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Điện thoại thông minh XYZ Pro">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Điện thoại thông minh XYZ Pro</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(100)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">7.490.000₫</span>5.990.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/2.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Canon camera 20x zoom, Black color EOS 2000</h5>
-                            <p class="card-text">$320.00</p>
-                            <div class="btn-group card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#" class="btn btn-primary">
-                                    <i class="fas fa-shopping-cart me-2"></i>Add to cart
-                                </a>
-                                <a href="#" class="btn btn-success">Buy now</a>
-                                <button class="wishlist-btn" title="Add to wishlist">
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-15%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Laptop ABC Ultra Slim">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Laptop ABC Ultra Slim</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(80)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">17.490.000₫</span>14.890.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-30%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Tai nghe không dây DEF Max">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Tai nghe không dây DEF Max</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(150)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">2.490.000₫</span>1.750.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="discount-badge">-25%</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Đồng hồ thông minh GHI Sport">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Đồng hồ thông minh GHI Sport</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(90)</span>
+                            </div>
+                            <div class="product-price">
+                                <span class="text-decoration-line-through text-muted me-2">3.990.000₫</span>2.990.000₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- New Products -->
+    <section class="new-products-section">
+        <div class="container">
+            <h2 class="section-title">Sản Phẩm Mới</h2>
+            <div class="row">
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="new-badge">Mới</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Camera hành trình JKL 4K">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Camera hành trình JKL 4K</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(50)</span>
+                            </div>
+                            <div class="product-price">3.490.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="new-badge">Mới</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Máy tính bảng MNO Pro">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Máy tính bảng MNO Pro</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(60)</span>
+                            </div>
+                            <div class="product-price">8.790.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="new-badge">Mới</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Loa bluetooth PQR Sound">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Loa bluetooth PQR Sound</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(70)</span>
+                            </div>
+                            <div class="product-price">1.990.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <span class="new-badge">Mới</span>
+                        <div class="product-img">
+                            <img src="/api/placeholder/400/300" alt="Bàn phím cơ STU Gaming">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                            <h5 class="product-title">Bàn phím cơ STU Gaming</h5>
+                            <div class="rating">
+                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                    class="fas fa-star-half-alt"></i><i class="far fa-star"></i>
+                                <span class="ms-1">(80)</span>
+                            </div>
+                            <div class="product-price">2.490.000₫</div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm vào
+                                    giỏ</button>
+                                <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- All Products -->
+    <section class="all-section">
+        <div class="container">
+            <h2 class="section-title">Tất Cả Sản Phẩm</h2>
+            <div class="row">
+                <div class="col-lg-3 mb-4">
+                    <div class="filter-box">
+                        <h3 class="filter-title">Danh Mục</h3>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="cat1" checked>
+                            <label class="form-check-label" for="cat1">Điện thoại & Máy tính bảng</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="cat2">
+                            <label class="form-check-label" for="cat2">Laptop & Máy tính</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="cat3">
+                            <label class="form-check-label" for="cat3">Âm thanh</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="cat4">
+                            <label class="form-check-label" for="cat4">Phụ kiện</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="cat5">
+                            <label class="form-check-label" for="cat5">Thiết bị thông minh</label>
+                        </div>
+                    </div>
+                    <div class="filter-box">
+                        <h3 class="filter-title">Khoảng Giá</h3>
+                        <select class="form-select" onchange="filterByPrice(this.value)">
+                            <option value="">Chọn khoảng giá</option>
+                            <option value="0-5000000">Dưới 5.000.000₫</option>
+                            <option value="5000000-10000000">5.000.000₫ - 10.000.000₫</option>
+                            <option value="10000000-15000000">10.000.000₫ - 15.000.000₫</option>
+                            <option value="15000000-20000000">15.000.000₫ - 20.000.000₫</option>
+                            <option value="20000000+">Trên 20.000.000₫</option>
+                        </select>
+                    </div>
+                    <div class="filter-box">
+                        <h3 class="filter-title">Thương Hiệu</h3>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="brand1">
+                            <label class="form-check-label" for="brand1">Apple</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="brand2">
+                            <label class="form-check-label" for="brand2">Samsung</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="brand3">
+                            <label class="form-check-label" for="brand3">Xiaomi</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="brand4">
+                            <label class="form-check-label" for="brand4">Sony</label>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="checkbox" id="brand5">
+                            <label class="form-check-label" for="brand5">Dell</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-9">
+                    <div class="sort-options d-flex justify-content-between align-items-center">
+                        <div class="results-count">Hiển thị 1-12 của 36 sản phẩm</div>
+                        <select class="form-select w-auto" onchange="sortProducts(this.value)">
+                            <option value="">Sắp xếp theo</option>
+                            <option value="price-asc">Giá: Thấp đến Cao</option>
+                            <option value="price-desc">Giá: Cao đến Thấp</option>
+                            <option value="newest">Mới nhất</option>
+                            <option value="popular">Phổ biến nhất</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại XYZ Pro Max">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại XYZ Pro Max</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(120)</span>
+                                    </div>
+                                    <div class="product-price">9.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại XYZ Lite">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại XYZ Lite</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(90)</span>
+                                    </div>
+                                    <div class="product-price">4.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <span class="discount-badge">-10%</span>
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại XYZ Note">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại XYZ Note</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(110)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span
+                                            class="text-decoration-line-through text-muted me-2">8.290.000₫</span>7.490.000₫
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại XYZ Mini">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại XYZ Mini</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(80)</span>
+                                    </div>
+                                    <div class="product-price">3.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại ABC Ultra">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại ABC Ultra</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(130)</span>
+                                    </div>
+                                    <div class="product-price">15.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <span class="discount-badge">-15%</span>
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại ABC Plus">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại ABC Plus</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(100)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span
+                                            class="text-decoration-line-through text-muted me-2">9.990.000₫</span>8.490.000₫
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại ABC Standard">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại ABC Standard</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(110)</span>
+                                    </div>
+                                    <div class="product-price">6.490.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại DEF Pro">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại DEF Pro</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(140)</span>
+                                    </div>
+                                    <div class="product-price">12.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <span class="new-badge">Mới</span>
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại DEF Max">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại DEF Max</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(150)</span>
+                                    </div>
+                                    <div class="product-price">18.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Điện thoại DEF Lite">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Điện thoại DEF Lite</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(90)</span>
+                                    </div>
+                                    <div class="product-price">5.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Máy tính bảng GHI Pro">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Máy tính bảng GHI Pro</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(100)</span>
+                                    </div>
+                                    <div class="product-price">10.990.000₫</div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 col-lg-4 mb-4">
+                            <div class="product-card">
+                                <span class="discount-badge">-20%</span>
+                                <div class="product-img">
+                                    <img src="/api/placeholder/400/300" alt="Máy tính bảng GHI Mini">
+                                </div>
+                                <div class="product-body">
+                                    <div class="product-store"><i class="fas fa-store me-1"></i> TechWorld Store</div>
+                                    <h5 class="product-title">Máy tính bảng GHI Mini</h5>
+                                    <div class="rating">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i
+                                            class="fas fa-star"></i><i class="fas fa-star-half-alt"></i><i
+                                            class="far fa-star"></i>
+                                        <span class="ms-1">(110)</span>
+                                    </div>
+                                    <div class="product-price">
+                                        <span
+                                            class="text-decoration-line-through text-muted me-2">7.490.000₫</span>5.990.000₫
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-product me-2"><i class="fas fa-cart-plus me-1"></i> Thêm
+                                            vào giỏ</button>
+                                        <button class="btn btn-wishlist"><i class="far fa-heart"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center mt-4">
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#">></a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">TechWorld Store</h5>
+                    <p class="text-white-50">Chuyên cung cấp các sản phẩm công nghệ chính hãng với giá cả cạnh tranh.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Liên kết nhanh</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Về chúng tôi</a></li>
+                        <li><a href="#">Liên hệ</a></li>
+                        <li><a href="#">Tuyển dụng</a></li>
+                        <li><a href="#">Tin tức</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Hỗ trợ khách hàng</h5>
+                    <ul class="footer-links">
+                        <li><a href="#">Trung tâm trợ giúp</a></li>
+                        <li><a href="#">Hướng dẫn mua hàng</a></li>
+                        <li><a href="#">Vận chuyển</a></li>
+                        <li><a href="#">Đổi trả sản phẩm</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <h5 class="footer-title">Liên hệ</h5>
+                    <ul class="footer-contact">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP. HCM</li>
+                        <li><i class="fas fa-phone"></i> (028) 3456 7890</li>
+                        <li><i class="fas fa-envelope"></i> support@techworld.vn</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p class="m-0">© 2025 TechWorld Store. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let allProducts = [];
+        let currentPage = 1;
+        const pageSize = 2; // Số sản phẩm mỗi trang
+
+        function debounce(func, wait) {
+            let timeout;
+            return function (...args) {
+                clearTimeout(timeout);
+                timeout = setTimeout(() => func.apply(this, args), wait);
+            };
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Hàm xử lý lọc theo khoảng giá
+            window.filterByPrice = function (range) {
+                const products = document.querySelectorAll('.all-section .product-card');
+                products.forEach(product => {
+                    const priceText = product.querySelector('.product-price').textContent;
+                    const price = parseInt(priceText.split('₫')[0].replace(/[^0-9]/g, ''));
+                    let [min, max] = range.split('-').map(val => val === '+' ? Infinity : parseInt(val));
+                    if (!range || (price >= min && price <= max)) {
+                        product.style.display = 'block';
+                    } else {
+                        product.style.display = 'none';
+                    }
+                });
+            };
+
+            function renderShopData(data) {
+                const shopName = document.querySelector('.hero .container h1');
+                const shopDescription = document.querySelector('.shop-description');
+                const heroSection = document.querySelector('.hero');
+                if (data.linkImg) {
+                    heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(${data.linkImg})`;
+                } else {
+                    heroSection.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://via.placeholder.com/1200x300')`;
+                }
+                shopName.textContent = data.shopName;
+            }
+
+            function fetchShopData() {
+                let shopId = document.getElementById('shopId').value;
+                shopId = parseInt(shopId);
+                console.log(shopId);
+                fetch('/all/get_shop_info/' + shopId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        renderShopData(data);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching shop data:', error);
+                    });
+            }
+
+            function fetchDiscountProducts() {
+                fetch('/api/discount-products', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Không thể tải danh sách sản phẩm nổi bật');
+                        }
+                        return response.json();
+                    })
+                    .then(products => {
+                        renderDiscountProducts(products);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching featured products:', error);
+                        const featuredSection = document.querySelector('.discount-section .row');
+                        featuredSection.innerHTML = '<p class="text-danger text-center">Không thể tải sản phẩm nổi bật. Vui lòng thử lại sau.</p>';
+                    });
+            }
+
+            function renderDiscountProducts(products) {
+                const featuredSection = document.querySelector('.discount-section .row');
+                featuredSection.innerHTML = '';
+
+                products.forEach(product => {
+                    const discountedPrice = product.sellCost;
+                    const ratingStars = generateRatingStars(5);
+                    const productCard = `
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
+                        <div class="product-img">
+                            <img src="${product.linkImg || 'https://via.placeholder.com/400x300'}" alt="${product.productName}">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> ${product.shopName}
+                            </div>
+                            <h5 class="product-title">${product.productName}</h5>
+                            <div class="rating">
+                                ${ratingStars}
+                                <span class="ms-1">(${product.viewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                ${product.discount > 0
+                            ? `<span class="text-decoration-line-through text-muted me-2">${formatPrice(product.cost)}₫</span>${formatPrice(discountedPrice)}₫`
+                            : `${formatPrice(product.cost)}₫`}
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2" onclick="addToCart(${product.productID})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist" onclick="addToWishlist(${product.productID})">
                                     <i class="far fa-heart"></i>
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/3.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Xiaomi Redmi 8 Original Global Version 4GB</h5>
-                            <p class="card-text">$120.00</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+            `;
+                    featuredSection.insertAdjacentHTML('beforeend', productCard);
+                });
+            }
+
+            function fetchNewProducts() {
+                let shopId = document.getElementById('shopId').value;
+                shopId = parseInt(shopId);
+                fetch('/api/new-products/' + shopId, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(products => {
+                        renderNewProducts(products);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching new products:', error);
+                    });
+            }
+
+            function renderNewProducts(products) {
+                const newProductsSection = document.querySelector('.new-products-section .row');
+                newProductsSection.innerHTML = '';
+
+                products.forEach(product => {
+                    const ratingStars = generateRatingStars(5);
+                    const productCard = `
+                <div class="col-md-6 col-lg-3 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="${product.linkImg || 'https://via.placeholder.com/400x300'}" alt="${product.productName}">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> ${product.shopName}
+                            </div>
+                            <h5 class="product-title">${product.productName}</h5>
+                            <div class="rating">
+                                ${ratingStars}
+                                <span class="ms-1">(${product.viewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                ${formatPrice(product.cost)}₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2" onclick="addToCart(${product.productID})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist" onclick="addToWishlist(${product.productID})">
+                                    <i class="far fa-heart"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/4.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Apple iPhone 12 Pro 6.1" RAM 6GB 512GB Unlocked</h5>
-                            <p class="card-text">$120.00</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
+            `;
+                    newProductsSection.insertAdjacentHTML('beforeend', productCard);
+                });
+            }
+
+            function fetchAllProducts(page = 0, sort = '') {
+                let shopId = parseInt(document.getElementById('shopId').value);
+                fetch(`/api/all-products/${shopId}?page=${page}&size=${pageSize}${sort ? '&sort=' + sort : ''}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        allProducts = data.content || [];
+                        renderAllProducts(allProducts);
+                        updatePagination(data.totalPages || 1);
+                    })
+                    .catch(error => {
+                        console.error('Error fetching all products:', error);
+                    });
+            }
+
+            function renderAllProducts(products) {
+                const allProductsSection = document.querySelector('.all-section .row .row');
+                allProductsSection.innerHTML = ''; // Xóa nội dung hiện tại
+                products.forEach(product => {
+                    const ratingStars = generateRatingStars(5);
+                    const productCard = `
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="product-card">
+                        <div class="product-img">
+                            <img src="${product.linkImg || 'https://via.placeholder.com/400x300'}" alt="${product.productName}">
+                        </div>
+                        <div class="product-body">
+                            <div class="product-store">
+                                <i class="fas fa-store me-1"></i> ${product.shopName}
+                            </div>
+                            <h5 class="product-title">${product.productName}</h5>
+                            <div class="rating">
+                                ${ratingStars}
+                                <span class="ms-1">(${product.viewCount})</span>
+                            </div>
+                            <div class="product-price">
+                                ${formatPrice(product.cost)}₫
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <button class="btn btn-product me-2" onclick="addToCart(${product.productID})">
+                                    <i class="fas fa-cart-plus me-1"></i> Thêm vào giỏ
+                                </button>
+                                <button class="btn btn-wishlist" onclick="addToWishlist(${product.productID})">
+                                    <i class="far fa-heart"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/5.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Apple Watch Series 1 Sport Case 38mm Black</h5>
-                            <p class="card-text">$790.50</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/6.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">T-shirts with multiple colors, for men and lady</h5>
-                            <p class="card-text">$120.00</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/7.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">Gaming Headset 32db Blackbuilt in mic</h5>
-                            <p class="card-text">$99.50</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border icon-hover px-2 pt-2"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 col-sm-6 d-flex">
-                    <div class="card w-100 my-2 shadow-2-strong">
-                        <img src="https://mdbootstrap.com/img/bootstrap-ecommerce/items/8.webp" class="card-img-top"
-                            style="aspect-ratio: 1 / 1" />
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">T-shirts with multiple colors, for men and lady</h5>
-                            <p class="card-text">$120.00</p>
-                            <div class="card-footer d-flex align-items-end pt-3 px-0 pb-0 mt-auto">
-                                <a href="#!" class="btn btn-primary shadow-0 me-1">Add to cart</a>
-                                <a href="#!" class="btn btn-light border px-2 pt-2 icon-hover"><i
-                                        class="fas fa-heart fa-lg text-secondary px-1"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Products -->
+            `;
+                    allProductsSection.insertAdjacentHTML('beforeend', productCard);
+                });
+            }
 
-    <!-- Feature -->
-    <section class="mt-5" style="background-color: #f5f5f5;">
-        <div class="container text-dark pt-3">
-            <header class="pt-4 pb-3">
-                <h3>Why choose us</h3>
-            </header>
+            function updatePagination(totalPages) {
+                const pagination = document.querySelector('.pagination');
+                pagination.innerHTML = '';
+                for (let i = 1; i <= totalPages; i++) {
+                    const li = document.createElement('li');
+                    li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    li.innerHTML = `<button class="page-link" onclick="changePage(${i})">${i}</button>`;
+                    pagination.appendChild(li);
+                }
+            }
 
-            <div class="row mb-4">
-                <div class="col-lg-4 col-md-6">
-                    <figure class="d-flex align-items-center mb-4">
-                        <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-                            <i class="fas fa-camera-retro fa-2x fa-fw text-primary floating"></i>
-                        </span>
-                        <figcaption class="info">
-                            <h6 class="title">Reasonable prices</h6>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
-                        </figcaption>
-                    </figure>
-                    <!-- itemside // -->
-                </div>
-                <!-- col // -->
-                <div class="col-lg-4 col-md-6">
-                    <figure class="d-flex align-items-center mb-4">
-                        <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-                            <i class="fas fa-star fa-2x fa-fw text-primary floating"></i>
-                        </span>
-                        <figcaption class="info">
-                            <h6 class="title">Best quality</h6>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
-                        </figcaption>
-                    </figure>
-                    <!-- itemside // -->
-                </div>
-                <!-- col // -->
-                <div class="col-lg-4 col-md-6">
-                    <figure class="d-flex align-items-center mb-4">
-                        <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-                            <i class="fas fa-plane fa-2x fa-fw text-primary floating"></i>
-                        </span>
-                        <figcaption class="info">
-                            <h6 class="title">Worldwide shipping</h6>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
-                        </figcaption>
-                    </figure>
-                    <!-- itemside // -->
-                </div>
-                <!-- col // -->
-                <div class="col-lg-4 col-md-6">
-                    <figure class="d-flex align-items-center mb-4">
-                        <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-                            <i class="fas fa-users fa-2x fa-fw text-primary floating"></i>
-                        </span>
-                        <figcaption class="info">
-                            <h6 class="title">Customer satisfaction</h6>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
-                        </figcaption>
-                    </figure>
-                    <!-- itemside // -->
-                </div>
-                <!-- col // -->
-                <div class="col-lg-4 col-md-6">
-                    <figure class="d-flex align-items-center mb-4">
-                        <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-                            <i class="fas fa-thumbs-up fa-2x fa-fw text-primary floating"></i>
-                        </span>
-                        <figcaption class="info">
-                            <h6 class="title">Happy customers</h6>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
-                        </figcaption>
-                    </figure>
-                    <!-- itemside // -->
-                </div>
-                <!-- col // -->
-                <div class="col-lg-4 col-md-6">
-                    <figure class="d-flex align-items-center mb-4">
-                        <span class="rounded-circle bg-white p-3 d-flex me-2 mb-2">
-                            <i class="fas fa-box fa-2x fa-fw text-primary floating"></i>
-                        </span>
-                        <figcaption class="info">
-                            <h6 class="title">Thousand items</h6>
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit sed do eiusmor</p>
-                        </figcaption>
-                    </figure>
-                    <!-- itemside // -->
-                </div>
-                <!-- col // -->
-            </div>
-        </div>
-        <!-- container end.// -->
-    </section>
-    <!-- Feature -->
+            window.changePage = function (page) {
+                currentPage = page;
+                fetchAllProducts(page - 1); // Chuyển sang index 0-based
+            };
 
-    <!-- Blog -->
-    <section class="mt-5 mb-4">
-        <div class="container text-dark">
-            <header class="mb-4">
-                <h3>Blog posts</h3>
-            </header>
 
-            <div class="row">
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <article>
-                        <a href="#" class="img-fluid">
-                            <img class="rounded w-100"
-                                src="https://mdbootstrap.com/img/bootstrap-ecommerce/posts/1.webp"
-                                style="object-fit: cover;" height="160" />
-                        </a>
-                        <div class="mt-2 text-muted small d-block mb-1">
-                            <span>
-                                <i class="fa fa-calendar-alt fa-sm"></i>
-                                23.12.2022
-                            </span>
-                            <a href="#">
-                                <h6 class="text-dark">How to promote brands</h6>
-                            </a>
-                            <p>When you enter into any new area of science, you almost reach</p>
-                        </div>
-                    </article>
-                </div>
-                <!-- col.// -->
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <article>
-                        <a href="#" class="img-fluid">
-                            <img class="rounded w-100"
-                                src="https://mdbootstrap.com/img/bootstrap-ecommerce/posts/2.webp"
-                                style="object-fit: cover;" height="160" />
-                        </a>
-                        <div class="mt-2 text-muted small d-block mb-1">
-                            <span>
-                                <i class="fa fa-calendar-alt fa-sm"></i>
-                                13.12.2022
-                            </span>
-                            <a href="#">
-                                <h6 class="text-dark">How we handle shipping</h6>
-                            </a>
-                            <p>When you enter into any new area of science, you almost reach</p>
-                        </div>
-                    </article>
-                </div>
-                <!-- col.// -->
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <article>
-                        <a href="#" class="img-fluid">
-                            <img class="rounded w-100"
-                                src="https://mdbootstrap.com/img/bootstrap-ecommerce/posts/3.webp"
-                                style="object-fit: cover;" height="160" />
-                        </a>
-                        <div class="mt-2 text-muted small d-block mb-1">
-                            <span>
-                                <i class="fa fa-calendar-alt fa-sm"></i>
-                                25.11.2022
-                            </span>
-                            <a href="#">
-                                <h6 class="text-dark">How to promote brands</h6>
-                            </a>
-                            <p>When you enter into any new area of science, you almost reach</p>
-                        </div>
-                    </article>
-                </div>
-                <!-- col.// -->
-                <div class="col-lg-3 col-md-6 col-sm-6 col-12">
-                    <article>
-                        <a href="#" class="img-fluid">
-                            <img class="rounded w-100"
-                                src="https://mdbootstrap.com/img/bootstrap-ecommerce/posts/4.webp"
-                                style="object-fit: cover;" height="160" />
-                        </a>
-                        <div class="mt-2 text-muted small d-block mb-1">
-                            <span>
-                                <i class="fa fa-calendar-alt fa-sm"></i>
-                                03.09.2022
-                            </span>
-                            <a href="#">
-                                <h6 class="text-dark">Success story of sellers</h6>
-                            </a>
-                            <p>When you enter into any new area of science, you almost reach</p>
-                        </div>
-                    </article>
-                </div>
-            </div>
-        </div>
-    </section>
-    <!-- Blog -->
+            window.sortProducts = debounce(function (sortOption) {
+                let sortParam = '';
+                if (sortOption === 'price-asc') sortParam = 'cost,asc';
+                else if (sortOption === 'price-desc') sortParam = 'cost,desc';
+                else if (sortOption === 'newest') sortParam = 'productID,desc';
+                else if (sortOption === 'popular') sortParam = 'viewCount,desc';
+                fetchAllProducts(currentPage - 1, sortParam);
+            }, 300);
 
-    <!-- Footer -->
-    <footer class="text-center text-lg-start text-muted mt-3" style="background-color: #f5f5f5;">
-        <!-- Section: Links  -->
-        <section class="">
-            <div class="container text-center text-md-start pt-4 pb-4">
-                <!-- Grid row -->
-                <div class="row mt-3">
-                    <!-- Grid column -->
-                    <div class="col-12 col-lg-3 col-sm-12 mb-2">
-                        <!-- Content -->
-                        <a href="https://mdbootstrap.com/" target="_blank" class="">
-                            <img src="https://mdbootstrap.com/img/logo/mdb-transaprent-noshadows.png" height="35" />
-                        </a>
-                        <p class="mt-2 text-dark">
-                            © 2023 Copyright: MDBootstrap.com
-                        </p>
-                    </div>
-                    <!-- Grid column -->
+            function generateRatingStars(rating) {
+                let stars = '';
+                const fullStars = Math.floor(rating);
+                const hasHalfStar = rating % 1 >= 0.5;
+                for (let i = 0; i < fullStars; i++) {
+                    stars += '<i class="fas fa-star"></i>';
+                }
+                if (hasHalfStar) {
+                    stars += '<i class="fas fa-star-half-alt"></i>';
+                }
+                const remainingStars = 5 - Math.ceil(rating);
+                for (let i = 0; i < remainingStars; i++) {
+                    stars += '<i class="far fa-star"></i>';
+                }
+                return stars;
+            }
 
-                    <!-- Grid column -->
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <!-- Links -->
-                        <h6 class="text-uppercase text-dark fw-bold mb-2">
-                            Store
-                        </h6>
-                        <ul class="list-unstyled mb-4">
-                            <li><a class="text-muted" href="#">About us</a></li>
-                            <li><a class="text-muted" href="#">Find store</a></li>
-                            <li><a class="text-muted" href="#">Categories</a></li>
-                            <li><a class="text-muted" href="#">Blogs</a></li>
-                        </ul>
-                    </div>
-                    <!-- Grid column -->
+            function formatPrice(price) {
+                return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+            }
 
-                    <!-- Grid column -->
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <!-- Links -->
-                        <h6 class="text-uppercase text-dark fw-bold mb-2">
-                            Information
-                        </h6>
-                        <ul class="list-unstyled mb-4">
-                            <li><a class="text-muted" href="#">Help center</a></li>
-                            <li><a class="text-muted" href="#">Money refund</a></li>
-                            <li><a class="text-muted" href="#">Shipping info</a></li>
-                            <li><a class="text-muted" href="#">Refunds</a></li>
-                        </ul>
-                    </div>
-                    <!-- Grid column -->
-
-                    <!-- Grid column -->
-                    <div class="col-6 col-sm-4 col-lg-2">
-                        <!-- Links -->
-                        <h6 class="text-uppercase text-dark fw-bold mb-2">
-                            Support
-                        </h6>
-                        <ul class="list-unstyled mb-4">
-                            <li><a class="text-muted" href="#">Help center</a></li>
-                            <li><a class="text-muted" href="#">Documents</a></li>
-                            <li><a class="text-muted" href="#">Account restore</a></li>
-                            <li><a class="text-muted" href="#">My orders</a></li>
-                        </ul>
-                    </div>
-                    <!-- Grid column -->
-
-                    <!-- Grid column -->
-                    <div class="col-12 col-sm-12 col-lg-3">
-                        <!-- Links -->
-                        <h6 class="text-uppercase text-dark fw-bold mb-2">Newsletter</h6>
-                        <p class="text-muted">Stay in touch with latest updates about our products and offers</p>
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control border" placeholder="Email" aria-label="Email"
-                                aria-describedby="button-addon2" />
-                            <button class="btn btn-light border shadow-0" type="button" id="button-addon2"
-                                data-mdb-ripple-color="dark">
-                                Join
-                            </button>
-                        </div>
-                    </div>
-                    <!-- Grid column -->
-                </div>
-                <!-- Grid row -->
-            </div>
-        </section>
-        <!-- Section: Links  -->
-
-        <div class="">
-            <div class="container">
-                <div class="d-flex justify-content-between py-4 border-top">
-                    <!--- payment --->
-                    <div>
-                        <i class="fab fa-lg fa-cc-visa text-dark"></i>
-                        <i class="fab fa-lg fa-cc-amex text-dark"></i>
-                        <i class="fab fa-lg fa-cc-mastercard text-dark"></i>
-                        <i class="fab fa-lg fa-cc-paypal text-dark"></i>
-                    </div>
-                    <!--- payment --->
-
-                    <!--- language selector --->
-                    <div class="dropdown dropup">
-                        <a class="dropdown-toggle text-dark" href="#" id="Dropdown" role="button"
-                            data-mdb-toggle="dropdown" aria-expanded="false"> <i
-                                class="flag-united-kingdom flag m-0 me-1"></i>English </a>
-
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="Dropdown">
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-united-kingdom flag"></i>English <i
-                                        class="fa fa-check text-success ms-2"></i></a>
-                            </li>
-                            <li>
-                                <hr class="dropdown-divider" />
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-poland flag"></i>Polski</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-china flag"></i>中文</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-japan flag"></i>日本語</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-germany flag"></i>Deutsch</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-france flag"></i>Français</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-spain flag"></i>Español</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-russia flag"></i>Русский</a>
-                            </li>
-                            <li>
-                                <a class="dropdown-item" href="#"><i class="flag-portugal flag"></i>Português</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!--- language selector --->
-                </div>
-            </div>
-        </div>
-    </footer>
-    <!-- Footer -->
+            fetchShopData();
+            fetchDiscountProducts();
+            fetchNewProducts();
+            fetchAllProducts();
+        });
+    </script>
 </body>
 
 </html>

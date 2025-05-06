@@ -1,12 +1,17 @@
 package com.example.projectII.Controller.PageController;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.projectII.Service.RegisterService;
+import com.example.projectII.Service.ShopService;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,6 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class PageController {
     @Autowired
     private RegisterService registerService;
+
+    @Autowired
+    private ShopService shopService;
 
     @GetMapping("/")
     public String home() {
@@ -66,6 +74,23 @@ public class PageController {
         return "redirect:/all/login?logout=true";
     }
     
-    
+    @GetMapping("/view_shop/{shopId}")
+    public String viewShop(@PathVariable("shopId") int shopId, Model model) {
+        // Fetch shop details using the shopId and add to the model
+        // Example: ShopDTO shop = shopService.getShopById(shopId);
+        // model.addAttribute("shop", shop);
+        model.addAttribute("shopId", shopId);
+        System.out.println("Shop ID: " + shopId);
+        return "shop"; // Return the name of the view for displaying shop details
+    }
+
+    @GetMapping("/get_shop_info/{shopId}")
+    public ResponseEntity<?> getShopInfo(@PathVariable("shopId") int shopId) {
+        try {
+            return ResponseEntity.ok(shopService.getShopById(shopId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching shop information: " + e.getMessage());
+        }
+    }
     
 }
