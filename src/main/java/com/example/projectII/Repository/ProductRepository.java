@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.projectII.Entity.Product;
 import com.example.projectII.Entity.Shop;
+import com.example.projectII.Entity.ShopCategory;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
@@ -28,6 +29,10 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
     List<Product> findTop10ByShop_ShopIDOrderByDiscountDesc(int shopID); //Lấy danh sách top 10 sản phẩm giảm giá nhiều nhất (sản phẩm không có thuộc tính discount mà phải tính toán từ giá gốc và giá khuyến mãi)
 
     Page<Product> findByShop(Shop shop, Pageable pageable);
+
+    Page<Product> findByShopCategory(ShopCategory category, Pageable pageable);
+
+   
 
 
     

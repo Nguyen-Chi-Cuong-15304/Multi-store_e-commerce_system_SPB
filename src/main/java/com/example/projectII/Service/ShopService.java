@@ -137,4 +137,25 @@ public class ShopService {
             return null;
         }
     }
+
+
+
+    public List<CategoryDTO> getCategoryByShopId(int shopId) {
+        // Lấy danh sách danh mục theo ID cửa hàng
+        try {
+            List<ShopCategory> categories = shopCategoryRepository.findByShop(shopRepository.findById(shopId).orElse(null));
+            List<CategoryDTO> categoryDTOs = new ArrayList<>();
+            for (ShopCategory category : categories) {
+                CategoryDTO categoryDTO = new CategoryDTO();
+                categoryDTO.setCategoryID(category.getShopCategoryID());
+                categoryDTO.setCategoryName(category.getCategoryName());
+                categoryDTO.setDescription(category.getDescription());
+                categoryDTOs.add(categoryDTO);
+            }
+            return categoryDTOs;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

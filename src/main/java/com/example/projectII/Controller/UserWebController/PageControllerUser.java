@@ -93,7 +93,8 @@ public class PageControllerUser {
     public ResponseEntity<?> getAllProducts(@PathVariable("shopId") int shopId, 
                                             @RequestParam(value = "page", defaultValue = "0") int page,
                                             @RequestParam(value = "size", defaultValue = "2") int size,
-                                            @RequestParam(value = "sort", required = false) String sort) {
+                                            @RequestParam(value = "sort", required = false) String sort,
+                                            @RequestParam(value = "categoryID", required = false) int categoryID) {
         try {
             PageRequest pageable = PageRequest.of(page, size);
             if (sort != null && !sort.isEmpty()) {
@@ -101,7 +102,7 @@ public class PageControllerUser {
                 Sort.Direction direction = sortParams[1].equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
                 pageable = PageRequest.of(page, size, Sort.by(direction, sortParams[0]));
             }
-            Page<ProductDTO> productPage = productService.getAllProductsByShopId(shopId, pageable);
+            Page<ProductDTO> productPage = productService.getAllProductsByShopId(shopId, pageable, categoryID);
 
             Map<String, Object> response = new HashMap<>();
             response.put("content", productPage.getContent());
@@ -114,6 +115,13 @@ public class PageControllerUser {
         }
     }
     
-    
+    @GetMapping("/category/{shopId}")
+    public ResponseEntity<?> getCategory(@PathVariable("shopId") int shopId) {
+        try {
+            return ResponseEntity.ok(shopService.getCategoryByShopId(shopId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching categories: " + e.getMessage());
+        }
+    }
     
 }

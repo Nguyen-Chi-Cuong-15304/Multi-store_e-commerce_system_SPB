@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import com.example.projectII.DTO.ProductDTO;
 import com.example.projectII.Entity.Product;
 import com.example.projectII.Entity.Shop;
+import com.example.projectII.Entity.ShopCategory;
 import com.example.projectII.Repository.ProductRepository;
 import com.example.projectII.Repository.ShopCategoryRepository;
 import com.example.projectII.Repository.ShopRepository;
@@ -343,9 +344,15 @@ public class ProductService {
         
     }
 
-    public Page<ProductDTO> getAllProductsByShopId(int shopID, Pageable pageable) {
+    public Page<ProductDTO> getAllProductsByShopId(int shopID, Pageable pageable, int categoryID) {
         // lấy tất cả sản phẩm của shop theo phân trang
-        Page<Product> products = productRepository.findByShop(shopRepository.findById(shopID).orElse(null), pageable);
+        ShopCategory category = shopCategoryRepository.findById(categoryID).orElse(null);
+        Page<Product> products = null;
+        if (categoryID == 0) {
+            products = productRepository.findByShop(shopRepository.findById(shopID).orElse(null), pageable);
+        } else {
+            products = productRepository.findByShopCategory(category, pageable);
+        }
         if (products == null || products.isEmpty()) {
             System.out.println("No products found for shop ID: " + shopID);
             return null; // or throw an exception
