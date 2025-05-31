@@ -93,4 +93,14 @@ public class PageController {
         }
     }
     
+    @GetMapping("/view_product/{productId}")
+    public String viewProduct(@PathVariable("productId") int productId, Model model) {
+        // Fetch product details using the productId and add to the model
+        // Example: ProductDTO product = productService.getProductById(productId);
+        // model.addAttribute("product", product);
+        model.addAttribute("productID", productId);
+        System.out.println("Product ID: " + productId);
+        return "product"; // Return the name of the view for displaying product details
+    }
+    
 }

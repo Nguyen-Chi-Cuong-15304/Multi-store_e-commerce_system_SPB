@@ -8,13 +8,20 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.projectII.DTO.ProductDTO;
+import com.example.projectII.Entity.Buyer;
 import com.example.projectII.Entity.Product;
+import com.example.projectII.Repository.BuyerRepository;
 import com.example.projectII.Service.ProductService;
 import com.example.projectII.Service.ShopService;
+
+import org.springframework.ui.Model;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,6 +34,8 @@ public class PageControllerUser {
     private ShopService shopService;
     @Autowired
     private ProductService productService;
+    @Autowired
+    private BuyerRepository buyerRepository;
 
     @GetMapping("/featured-products")
     public ResponseEntity<?> getFeaturedProducts() {
@@ -67,7 +76,19 @@ public class PageControllerUser {
     }
 
     @GetMapping("/cart")
-    public String getCartPage() {
+    public String getCartPage(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+            String username = authentication.getName();
+            Buyer buyer = buyerRepository.findByUsername(username)
+                    .orElseThrow(() -> new IllegalArgumentException("User not found"));
+            int buyerID = buyer.getBuyerID();
+            model.addAttribute("username", username);
+            model.addAttribute("buyerID", buyerID);
+            System.out.println("User is authenticated: " + username);
+        } else {
+            model.addAttribute("username", "Guest");
+        }
         return "shoppingcartv2"; // Trả về tên trang cart.html
     }
 
@@ -124,4 +145,35 @@ public class PageControllerUser {
         }
     }
     
+    @GetMapping("/product/{productId}")
+    public ResponseEntity<?> getProductById(@PathVariable("productId") int productId) {
+        try {
+            ProductDTO product = productService.getProductDTOByID(productId);
+            if (product != null) {
+                return ResponseEntity.ok(product);
+            } else {
+                return ResponseEntity.status(404).body("Product not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching product: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/related-products/{productID}")
+    public ResponseEntity<?> getRelatedProducts(@PathVariable("productID") int productID) {
+        try {
+            return ResponseEntity.ok(productService.getRelatedProducts(productID));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching related products: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/products/suggestions")
+    public ResponseEntity<?> getProductSuggestions(@RequestParam("query") String query) {
+        try {
+            return ResponseEntity.ok(productService.getProductSuggestions(query));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching product suggestions: " + e.getMessage());
+        }
+    }
 }

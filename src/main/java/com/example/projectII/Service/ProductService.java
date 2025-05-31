@@ -386,5 +386,114 @@ public class ProductService {
         return new PageImpl<>(productDTOs, pageable, products.getTotalElements());
     }
 
-    
+    public ProductDTO getProductDTOByID(int productID) {
+        Product product = productRepository.findById(productID).orElse(null);
+        if (product == null) {
+            System.out.println("Product not found with ID: " + productID);
+            return null; // or throw an exception
+        }
+        ProductDTO productDTO = new ProductDTO();
+        productDTO.setProductID(product.getProductID());
+        productDTO.setProductName(product.getProductName());
+        productDTO.setCost(product.getCost());
+        productDTO.setSellCost(product.getSellCost());
+        
+        productDTO.setViewCount(product.getViewCount());
+        productDTO.setInputCost(product.getInputPrice());
+        productDTO.setLinkImg(product.getImage()); // Add image link to DTO
+        productDTO.setPurchaseNumber(product.getPurchaseNumber()); // Add purchase number to DTO
+        productDTO.setDescription(product.getDescription()); // Add description to DTO
+
+        double discount = 0.0;
+        if (product.getCost() > 0) {
+            discount = ((product.getCost() - product.getSellCost()) / product.getCost()) * 100;
+        }
+        productDTO.setDiscount(discount); // Add discount to DTO
+        productDTO.setShopName(product.getShop().getShopName()); // Add shop name to DTO
+
+        // Thêm lượt xem cho sản phẩm
+        product.setViewCount(product.getViewCount() + 1);
+        productRepository.save(product); // Save the updated product to increment view count
+        
+        // Add other properties as needed
+        
+        return productDTO;
+    }
+
+    public List<ProductDTO> getRelatedProducts(int productID) {
+        Product product = productRepository.findById(productID).orElse(null);
+        if (product == null) {
+            System.out.println("Product not found with ID: " + productID);
+            return null; // or throw an exception
+        }
+        // tìm 4 sản phẩm ngẫu nhiên trong hệ thống vì chưa có đủ sản phẩm liên quan
+        List<Product> relatedProducts = productRepository.findTop6ByShop_ShopIDOrderByProductIDDesc(product.getShop().getShopID());
+        if (relatedProducts == null || relatedProducts.isEmpty()) {
+            System.out.println("No related products found for product ID: " + productID);
+            return null; // or throw an exception
+        } else {
+            System.out.println("Related products found for product ID " + productID + ": " + relatedProducts.size());
+        }
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product relatedProduct : relatedProducts) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductID(relatedProduct.getProductID());
+            productDTO.setProductName(relatedProduct.getProductName());
+            productDTO.setCost(relatedProduct.getCost());
+            productDTO.setSellCost(relatedProduct.getSellCost());
+            
+            productDTO.setViewCount(relatedProduct.getViewCount());
+            productDTO.setInputCost(relatedProduct.getInputPrice());
+            productDTO.setLinkImg(relatedProduct.getImage()); // Add image link to DTO
+            productDTO.setPurchaseNumber(relatedProduct.getPurchaseNumber()); // Add purchase number to DTO
+
+            double discount = 0.0;
+            if (relatedProduct.getCost() > 0) {
+                discount = ((relatedProduct.getCost() - relatedProduct.getSellCost()) / relatedProduct.getCost()) * 100;
+            }
+            productDTO.setDiscount(discount); // Add discount to DTO
+            productDTO.setShopName(relatedProduct.getShop().getShopName()); // Add shop name to DTO
+            
+            // Add other properties as needed
+            
+            productDTOs.add(productDTO);
+        }
+        return productDTOs;
+    }
+
+    public List<ProductDTO> getProductSuggestions(String query){
+        List<Product> products = productRepository.findByProductNameContainingIgnoreCase(query);
+        if (products == null || products.isEmpty()) {
+            System.out.println("No product suggestions found for query: " + query);
+            return null; // or throw an exception
+        } else {
+            System.out.println("Product suggestions found for query " + query + ": " + products.size());
+        }
+        List<ProductDTO> productDTOs = new ArrayList<>();
+        for (Product product : products) {
+            ProductDTO productDTO = new ProductDTO();
+            productDTO.setProductID(product.getProductID());
+            productDTO.setProductName(product.getProductName());
+            productDTO.setCost(product.getCost());
+            productDTO.setSellCost(product.getSellCost());
+            
+            productDTO.setViewCount(product.getViewCount());
+            productDTO.setInputCost(product.getInputPrice());
+            productDTO.setLinkImg(product.getImage()); // Add image link to DTO
+            productDTO.setPurchaseNumber(product.getPurchaseNumber()); // Add purchase number to DTO
+
+            double discount = 0.0;
+            if (product.getCost() > 0) {
+                discount = ((product.getCost() - product.getSellCost()) / product.getCost()) * 100;
+            }
+            productDTO.setDiscount(discount); // Add discount to DTO
+            productDTO.setShopName(product.getShop().getShopName()); // Add shop name to DTO
+            
+            // Add other properties as needed
+            
+            productDTOs.add(productDTO);
+        }
+        return productDTOs;
+    }
+
 }

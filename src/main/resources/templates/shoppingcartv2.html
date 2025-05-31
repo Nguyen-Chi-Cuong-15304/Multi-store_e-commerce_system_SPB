@@ -737,6 +737,92 @@
             border-color: var(--primary-color);
             box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
         }
+
+        /* CSS cho Modal Thanh Toán */
+        .modal-content {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary-color), #2980b9);
+            color: white;
+            border-radius: 10px 10px 0 0;
+            padding: 20px 25px;
+            border-bottom: none;
+        }
+
+        .modal-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.8;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px 15px;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+        }
+
+        .form-check {
+            padding: 10px 15px;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            transition: var(--transition);
+        }
+
+        .form-check:hover {
+            background-color: #f8f9fa;
+        }
+
+        .form-check-input:checked {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .form-check-label {
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .order-summary {
+            border: 2px solid #e9ecef;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-footer .btn {
+            padding: 10px 25px;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -790,6 +876,7 @@
 
     <!-- Cart Section -->
     <section class="cart-section py-5">
+        <input type="hidden" id="buyerID" th:value="${buyerID}" />
         <div class="container">
             <h2 class="section-title">Giỏ hàng của bạn</h2>
             <div class="row">
@@ -826,6 +913,113 @@
             </div>
         </div>
     </section>
+
+
+
+
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkoutModalLabel">
+                        <i class="fas fa-credit-card me-2"></i>Thông tin thanh toán
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="checkoutForm">
+                        <!-- Thông tin giao hàng -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-shipping-fast me-2 text-primary"></i>Thông tin giao hàng
+                            </h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="fullName" class="form-label">Họ và tên *</label>
+                                    <input type="text" class="form-control" id="fullName" required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="phoneNumber" class="form-label">Số điện thoại *</label>
+                                    <input type="tel" class="form-control" id="phoneNumber" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="email">
+                            </div>
+                            <div class="mb-3">
+                                <label for="address" class="form-label">Địa chỉ giao hàng *</label>
+                                <textarea class="form-control" id="address" rows="3" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Phương thức thanh toán -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-credit-card me-2 text-primary"></i>Phương thức thanh toán
+                            </h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="cod" value="cod"
+                                    checked>
+                                <label class="form-check-label" for="cod">
+                                    <i class="fas fa-money-bill-wave me-2"></i>Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="banking"
+                                    value="banking">
+                                <label class="form-check-label" for="banking">
+                                    <i class="fas fa-university me-2"></i>Chuyển khoản ngân hàng
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="momo"
+                                    value="momo">
+                                <label class="form-check-label" for="momo">
+                                    <i class="fas fa-mobile-alt me-2"></i>Ví điện tử MoMo
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="mb-4">
+                            <label for="notes" class="form-label">Ghi chú đơn hàng</label>
+                            <textarea class="form-control" id="notes" rows="2"
+                                placeholder="Ghi chú thêm cho đơn hàng (tùy chọn)"></textarea>
+                        </div>
+
+                        <!-- Tóm tắt đơn hàng -->
+                        <div class="order-summary bg-light p-3 rounded">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-receipt me-2 text-primary"></i>Tóm tắt đơn hàng
+                            </h6>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tổng tiền sản phẩm:</span>
+                                <span id="modalSubtotal">0₫</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Phí vận chuyển:</span>
+                                <span id="modalShipping">0₫</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between fw-bold text-danger">
+                                <span>Tổng cộng:</span>
+                                <span id="modalTotal">0₫</span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-cta" onclick="submitOrder()">
+                        <i class="fas fa-check me-2"></i>Xác nhận đặt hàng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- Footer -->
     <footer class="footer">
@@ -989,7 +1183,7 @@
 
         function updateCartSummary() {
             const subtotal = cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0);
-            const shippingFee = subtotal > 0 ? 30000 : 0; // Phí vận chuyển giả định
+            const shippingFee = subtotal > 0 ? 0 : 0; // Phí vận chuyển giả định
             const total = subtotal + shippingFee;
 
             document.getElementById('cartSubtotal').textContent = formatPrice(subtotal) + '₫';
@@ -1002,14 +1196,152 @@
             return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
         }
 
+        // function proceedToCheckout() {
+        //     if (cart.length === 0) {
+        //         alert('Giỏ hàng của bạn đang trống!');
+        //         return;
+        //     }
+        //     alert('Tiến hành thanh toán! (Chức năng này chưa được triển khai)');
+        //     // Thêm logic để chuyển hướng đến trang thanh toán
+        //     const buyerID = document.getElementById('buyerID').value;
+        //     if (!buyerID) {
+        //         alert('Bạn cần đăng nhập để thanh toán!');
+        //         return;
+        //     }
+
+        // }
+
+
+
+        // Cập nhật hàm proceedToCheckout()
         function proceedToCheckout() {
             if (cart.length === 0) {
                 alert('Giỏ hàng của bạn đang trống!');
                 return;
             }
-            alert('Tiến hành thanh toán! (Chức năng này chưa được triển khai)');
-            // Thêm logic để chuyển hướng đến trang thanh toán
+
+            const buyerID = document.getElementById('buyerID').value;
+            if (!buyerID) {
+                alert('Bạn cần đăng nhập để thanh toán!');
+                return;
+            }
+
+            // Cập nhật thông tin tóm tắt trong modal
+            updateModalSummary();
+
+            // Hiển thị modal
+            const checkoutModal = new bootstrap.Modal(document.getElementById('checkoutModal'));
+            checkoutModal.show();
         }
+
+        // Hàm cập nhật tóm tắt đơn hàng trong modal
+        function updateModalSummary() {
+            const subtotal = cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0);
+            const shippingFee = subtotal > 0 ? 0 : 0; // Có thể tính phí ship theo logic riêng
+            const total = subtotal + shippingFee;
+
+            document.getElementById('modalSubtotal').textContent = formatPrice(subtotal) + '₫';
+            document.getElementById('modalShipping').textContent = formatPrice(shippingFee) + '₫';
+            document.getElementById('modalTotal').textContent = formatPrice(total) + '₫';
+        }
+
+        // Hàm xử lý submit đơn hàng
+        function submitOrder() {
+            // Validate form
+            const form = document.getElementById('checkoutForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Lấy thông tin từ form
+            const orderData = {
+                buyerID: document.getElementById('buyerID').value,
+                cartItems: cart, // Dữ liệu giỏ hàng đã có
+                // customerInfo: {
+                //     fullName: document.getElementById('fullName').value,
+                //     phoneNumber: document.getElementById('phoneNumber').value,
+                //     email: document.getElementById('email').value,
+                //     address: document.getElementById('address').value
+                // },
+                fullName: document.getElementById('fullName').value,
+                phoneNumber: document.getElementById('phoneNumber').value,
+                email: document.getElementById('email').value,
+                address: document.getElementById('address').value,
+                paymentMethod: document.querySelector('input[name="paymentMethod"]:checked').value,
+                notes: document.getElementById('notes').value,
+                // orderSummary: {
+                //     subtotal: cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0),
+                //     shippingFee: 0,
+                //     total: cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0)
+                // }
+                subtotal: cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0),
+                shippingFee: 0, // Giả định không có phí vận chuyển
+                total: cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0)
+            };
+            // const orderData = new FormData();
+            // orderData.append('buyerID', document.getElementById('buyerID').value);
+            // orderData.append('fullName', document.getElementById('fullName').value);
+            // orderData.append('phoneNumber', document.getElementById('phoneNumber').value);
+            // orderData.append('email', document.getElementById('email').value);
+            // orderData.append('address', document.getElementById('address').value);
+            // orderData.append('paymentMethod', document.querySelector('input[name="paymentMethod"]:checked').value);
+            // orderData.append('notes', document.getElementById('notes').value);
+            // orderData.append('cartItems', JSON.stringify(cart)); // Chuyển đổi giỏ hàng thành chuỗi JSON
+            // orderData.append('subtotal', cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0));
+            // orderData.append('shippingFee', 0); // Giả định không có phí vận chuyển
+            // orderData.append('total', cart.reduce((sum, item) => sum + item.sellCost * item.quantity, 0));
+
+            // Hiển thị loading
+            const submitBtn = event.target;
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Đang xử lý...';
+
+            // Console.log('Order Data:', orderData); // Debugging
+            console.log('Submitting order:', orderData);
+            // Gửi dữ liệu đến backend
+            fetch('/submitOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData) // Chuyển đổi đối tượng thành chuỗi JSON
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        console.log('Order submitted successfully:', data);
+                        window.location.href = data.redirectUrl; // Chuyển hướng đến trang theo dõi đơn hàng
+                        // Đóng modal
+                        const checkoutModal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
+                        checkoutModal.hide();
+
+                        // Hiển thị thông báo thành công
+                        //alert('Đặt hàng thành công! Mã đơn hàng: ' + data.orderCode);
+
+                        // Xóa giỏ hàng và cập nhật giao diện
+                        // cart = [];
+                        // renderCartItems();
+                        // updateCartSummary();
+
+                        // Có thể chuyển hướng đến trang theo dõi đơn hàng
+                        // window.location.href = '/orders/' + data.orderCode;
+                    } else {
+                        alert('Có lỗi xảy ra: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại!');
+                })
+                .finally(() => {
+                    // Restore button
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
+        }
+
     </script>
 </body>
 

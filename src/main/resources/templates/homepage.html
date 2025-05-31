@@ -8,6 +8,50 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/CSS/homepage.css">
+    <style>
+        .product-img img {
+            cursor: pointer;
+            /* Con trỏ tay khi hover */
+            transition: transform 0.2s;
+            /* Hiệu ứng phóng to mượt mà */
+        }
+
+        .product-img img:hover {
+            transform: scale(1.05);
+            /* Phóng to nhẹ khi hover */
+        }
+
+        #suggestions {
+        display: none;
+        position: absolute;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        list-style: none;
+        padding: 10px;
+        width: 300px;
+        z-index: 1000;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        max-height: 200px;
+        overflow-y: auto;
+    }
+    #suggestions li {
+        padding: 5px 0;
+    }
+    #suggestions a {
+        display: block;
+        padding: 5px 10px;
+        text-decoration: none;
+        color: #007BFF;
+    }
+    #suggestions a:hover {
+        background-color: #f0f0f0;
+    }
+    #searchInput:focus {
+        border-color: #0056b3;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    </style>
 </head>
 
 <body>
@@ -68,7 +112,12 @@
                         quốc</p>
                     <div class="search-container animate-fade-in-up delay-2">
                         <input type="text" class="form-control search-input"
-                            placeholder="Tìm kiếm sản phẩm, cửa hàng...">
+                            placeholder="Tìm kiếm sản phẩm, cửa hàng..." id="searchInput">
+                        <ul id="suggestions" style="display: none; position: absolute; background: white;
+                         border: 1px solid #ccc; border-radius: 5px; list-style: none; padding: 10px;
+                          width: 200px; z-index: 1000; box-shadow: 0 2px 5px rgba(0,0,0,0.2); max-height: 200px; overflow-y: auto;"></ul>
+
+
                         <button class="search-btn">
                             <i class="fas fa-search me-1"></i> Tìm kiếm
                         </button>
@@ -654,6 +703,77 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const suggestions = document.getElementById('suggestions');
+    const searchButton = document.getElementById('searchButton');
+
+    searchInput.addEventListener('input', async function() {
+        const query = this.value.trim();
+        if (query.length < 2) {
+            suggestions.style.display = 'none';
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/products/suggestions?query=${encodeURIComponent(query)}`);
+            const data = await response.json();
+            suggestions.innerHTML = ''; // Xóa danh sách cũ
+
+            if (data.length > 0) {
+                data.forEach(product => {
+                    const li = document.createElement('li');
+                    li.style.padding = '5px 0';
+                    li.style.display = 'flex';
+                    li.style.alignItems = 'center';
+
+                    const img = document.createElement('img');
+                    img.src = product.linkImg || '/default-image.jpg'; // Đường dẫn ảnh từ API, fallback nếu không có
+                    img.style.width = '50px';
+                    img.style.height = '50px';
+                    img.style.marginRight = '10px';
+                    img.style.objectFit = 'cover';
+                    img.style.borderRadius = '5px';
+                    const a = document.createElement('a');
+                    a.href = `/all/view_product/${product.productID}`; // Đường dẫn đến trang sản phẩm, thay productId bằng ID thực tế
+                    a.textContent = product.productName;
+                    a.style.display = 'block';
+                    a.style.padding = '5px 10px';
+                    a.style.textDecoration = 'none';
+                    a.style.color = '#007BFF';
+                    a.addEventListener('click', () => {
+                        suggestions.style.display = 'none';
+                    });
+                    li.appendChild(a);
+                    li.appendChild(img);
+                    suggestions.appendChild(li);
+                });
+                suggestions.style.display = 'block';
+            } else {
+                suggestions.style.display = 'none';
+            }
+        } catch (error) {
+            console.error('Lỗi khi lấy gợi ý:', error);
+            suggestions.style.display = 'none';
+        }
+    });
+
+    // Ẩn danh sách khi click ra ngoài
+    document.addEventListener('click', function(event) {
+        if (!searchInput.contains(event.target) && !suggestions.contains(event.target) && event.target !== searchButton) {
+            suggestions.style.display = 'none';
+        }
+    });
+
+    // Xử lý khi nhấn nút Tìm kiếm (tùy chọn)
+    searchButton.addEventListener('click', () => {
+        const query = searchInput.value.trim();
+        if (query) {
+            window.location.href = `/search?query=${encodeURIComponent(query)}`; // Chuyển đến trang kết quả tìm kiếm
+        }
+    });
+</script>
+
 </body>
 
 <script>
@@ -779,7 +899,7 @@
                     <div class="product-card">
                         ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
                         <div class="product-img">
-                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}">
+                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}" onclick="window.location.href='/all/view_product/${product.productID}'">
                         </div>
                         <div class="product-body">
                             <div class="product-store">
@@ -867,7 +987,7 @@
                     <div class="product-card">
                         ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
                         <div class="product-img">
-                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}">
+                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}" onclick="window.location.href='/all/view_product/${product.productID}'">
                         </div>
                         <div class="product-body">
                             <div class="product-store">
@@ -919,7 +1039,7 @@
                     <div class="product-card">
                         ${product.discount > 0 ? `<span class="discount-badge">-${(product.discount).toFixed(0)}%</span>` : ''}
                         <div class="product-img">
-                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}">
+                            <img src="${product.linkImg || '/api/placeholder/400/300'}" alt="${product.productName}" onclick="window.location.href='/all/view_product/${product.productID}'">
                         </div>
                         <div class="product-body">
                             <div class="product-store">
@@ -950,7 +1070,7 @@
                 featuredSection.insertAdjacentHTML('beforeend', productCard);
             });
         }
-    
+
         // Hàm tạo HTML cho rating stars
         function generateRatingStars(rating) {
             let stars = '';
@@ -1002,7 +1122,7 @@
                 .catch(error => {
                     console.error('Error adding product to cart:', error);
                 });
-            
+
             // Thêm logic gọi API để thêm sản phẩm vào giỏ hàng
         };
 
@@ -1017,6 +1137,7 @@
         fetchFeaturedStores();
         fetchBestSellingProducts();
         fetchDiscountProducts();
+
     });
 </script>
 
