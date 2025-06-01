@@ -12,4 +12,5 @@ import com.example.projectII.Entity.Buyer;
 @Repository
 public interface BuyerRepository extends JpaRepository<Buyer, Integer> {
     Optional<Buyer> findByUsername(String username);
+    Optional<Buyer> findByBuyerID(int buyerID);
 }

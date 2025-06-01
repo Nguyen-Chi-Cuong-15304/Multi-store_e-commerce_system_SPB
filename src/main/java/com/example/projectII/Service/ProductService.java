@@ -6,13 +6,16 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import com.example.projectII.DTO.OrderDTO;
 import com.example.projectII.DTO.ProductDTO;
+import com.example.projectII.Entity.Order;
 import com.example.projectII.Entity.Product;
 import com.example.projectII.Entity.Shop;
 import com.example.projectII.Entity.ShopCategory;
@@ -495,5 +498,7 @@ public class ProductService {
         }
         return productDTOs;
     }
+
+    
 
 }

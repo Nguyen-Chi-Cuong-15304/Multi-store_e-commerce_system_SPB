@@ -1,15 +1,25 @@
 package com.example.projectII.Repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.example.projectII.Entity.Buyer;
 import com.example.projectII.Entity.Order;
 
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-    // Define any custom query methods if needed
-    // For example, you can find orders by buyer ID or status
-    // List<Order> findByBuyerId(Integer buyerId);
+
+    List<Order> findAllByBuyer(Buyer buyer);
+
     
-    // You can also define methods to find orders by status, date range, etc.
+    
+    // Optional<Order> findByOrderId(int orderId);
+    
+    // List<Order> findByProductId(int productId);
+    
+    // List<Order> findByStatus(String status);
+    
+    // List<Order> findByOrderDateBetween(LocalDateTime startDate, LocalDateTime endDate);
 }

@@ -95,6 +95,7 @@
                                 <hr class="dropdown-divider">
                             </li>
                             <li><a class="dropdown-item" href="/all/dashboard">Trang cá nhân</a></li>
+                            <li th:if="${isLoggedIn}"><a class="dropdown-item" href="/all/orders">Đơn hàng của tôi</a></li>
                         </ul>
                     </li>
                 </ul>

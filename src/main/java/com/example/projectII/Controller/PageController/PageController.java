@@ -1,14 +1,20 @@
 package com.example.projectII.Controller.PageController;
 
+import java.security.Principal;
+
 import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.projectII.Entity.Buyer;
+import com.example.projectII.Repository.BuyerRepository;
 import com.example.projectII.Service.RegisterService;
 import com.example.projectII.Service.ShopService;
 
@@ -25,6 +31,9 @@ public class PageController {
 
     @Autowired
     private ShopService shopService;
+
+    @Autowired
+    private BuyerRepository buyerRepository;
 
     @GetMapping("/")
     public String home() {
@@ -102,5 +111,19 @@ public class PageController {
         System.out.println("Product ID: " + productId);
         return "product"; // Return the name of the view for displaying product details
     }
+
+    @GetMapping("/orders")
+    public String viewOrders(Model model) {
+        org.springframework.security.core.Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String username = auth.getName();
+        Buyer user = buyerRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username"));
+        int userID = user.getBuyerID();
+        model.addAttribute("username", username);
+        model.addAttribute("buyerID", userID);
+        return "order"; // Return the name of the view for displaying orders
+    }
+
+
     
 }

@@ -17,6 +17,7 @@ import com.example.projectII.DTO.ProductDTO;
 import com.example.projectII.Entity.Buyer;
 import com.example.projectII.Entity.Product;
 import com.example.projectII.Repository.BuyerRepository;
+import com.example.projectII.Service.OrderService;
 import com.example.projectII.Service.ProductService;
 import com.example.projectII.Service.ShopService;
 
@@ -36,6 +37,8 @@ public class PageControllerUser {
     private ProductService productService;
     @Autowired
     private BuyerRepository buyerRepository;
+    @Autowired
+    private OrderService orderService;
 
     @GetMapping("/featured-products")
     public ResponseEntity<?> getFeaturedProducts() {
@@ -174,6 +177,23 @@ public class PageControllerUser {
             return ResponseEntity.ok(productService.getProductSuggestions(query));
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error fetching product suggestions: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/orders/{userId}")
+    public ResponseEntity<?> getOrderHistory(@PathVariable("userId") int userId) {
+        try {
+            return ResponseEntity.ok(orderService.getOrderHistoryByUserId(userId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching order history: " + e.getMessage());
+        }
+    }
+        @GetMapping("/order_detail/{orderId}")
+    public ResponseEntity<?> getOrderDetails(@PathVariable("orderId") int orderId) {
+        try {
+            return ResponseEntity.ok(orderService.getOrderDetails(orderId));
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error fetching order details: " + e.getMessage());
         }
     }
 }

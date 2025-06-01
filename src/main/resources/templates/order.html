@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Các đơn hàng đã đặt - ShopOnline</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/homepage.css">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 5px;
+            width: 50%;
+            max-height: 70%;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close {
+            position: absolute;
+            right: 20px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        #orderDetails {
+            list-style: none;
+            padding: 0;
+        }
+
+        #orderDetails li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        #orderDetails li span {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+            <div class="container">
+                <a class="navbar-brand" href="#">
+                    <i class="fas fa-store me-2"></i>ShopOnline
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="/all/">
+                                <i class="fas fa-home me-1"></i> Trang chủ
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/all/shop">
+                                <i class="fas fa-store me-1"></i> Cửa hàng
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/api/cart">
+                                <i class="fas fa-shopping-cart me-1"></i> Giỏ hàng
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1"></i> <span th:text="${fullname}"></span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li th:if="${isLoggedIn}"><a class="dropdown-item" href="/all/logout">Đăng xuất</a></li>
+                                <li th:unless="${isLoggedIn}"><a class="dropdown-item" href="/all/login">Đăng nhập</a>
+                                </li>
+                                <li th:unless="${isLoggedIn}"><a class="dropdown-item" href="/all/register">Đăng ký</a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="/all/dashboard">Trang cá nhân</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+    <main>
+        <input type="hidden" id="userId" th:value="${buyerID}" />
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>Số thứ tự</th>
+                    <th>Ngày đặt hàng</th>
+                    <th>Địa chỉ</th>
+                    <th>Tổng tiền</th>
+                    <th>Trạng thái</th>
+                    <th>Chi tiết</th>
+                </tr>
+            </thead>
+            <tbody id="ordersBody">
+                <!-- Dữ liệu đơn hàng sẽ được thêm động bằng JavaScript -->
+            </tbody>
+        </table>
+
+        <!-- Modal chi tiết -->
+        <div id="orderModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Chi tiết đơn hàng</h2>
+                <ul id="orderDetails"></ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Dữ liệu mẫu (thay bằng API call nếu có backend)
+        // const orders = [
+        //     { id: 1, address: "123 Đường Lê Lợi, Quận 1, TP.HCM", total: 1200000, items: [{ name: "Áo sơ mi", quantity: 2 }, { name: "Quần jeans", quantity: 1 }] },
+        //     { id: 2, address: "456 Đường Nguyễn Huệ, Quận 3, TP.HCM", total: 850000, items: [{ name: "Giày thể thao", quantity: 1 }, { name: "Túi xách", quantity: 2 }] },
+        //     { id: 3, address: "789 Đường Trần Hưng Đạo, Quận 5, TP.HCM", total: 4500000, items: [{ name: "Điện thoại XYZ", quantity: 1 }, { name: "Tai nghe", quantity: 1 }] }
+        // ];
+
+        // fetch dữ liệu từ API nếu có
+        let orders = [];
+        const userId = document.getElementById('userId').value;
+        function fetch_orders() {
+            fetch('/api/orders/' + userId)
+                .then(response => response.json())
+                .then(data => {
+                    orders = data;
+                    console.log(orders);
+                    render_orders();
+                })
+                .catch(error => console.error('Lỗi khi lấy dữ liệu:', error));
+        }
+        function render_orders() {
+            const ordersBody = document.getElementById('ordersBody');
+            ordersBody.innerHTML = ''; // Xóa nội dung cũ
+            orders.forEach((order, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                <td>${index + 1}</td>
+                <td>${new Date(order.orderDate).toLocaleDateString('vi-VN')}</td>
+                <td>${order.address}</td>
+                <td>${order.totalPrice.toLocaleString()}₫</td>
+                <td>${order.status}</td>
+                <td><button class="detail-btn" data-id="${order.orderID}">Chi tiết</button></td>
+            `;
+                ordersBody.appendChild(row);
+            });
+            document.querySelectorAll('.detail-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    const orderId = button.getAttribute('data-id');
+                    // const order = orders.find(o => o.orderID == orderId);
+                    // console.log('Order selected:', order); // Debug: Kiểm tra order khi nhấn Chi tiết
+                    // Lấy chi tiết đơn hàng thông qua API
+                    fetch(`/api/order_detail/${orderId}`)
+                        .then(response => response.json())
+                        .then(order => {
+                            console.log("Chi tiết đơn hàng:", order);
+                            showOrderDetails(order);
+                        })
+                        .catch(error => {
+                            console.error('Lỗi khi lấy chi tiết đơn hàng:', error);
+                            // Hiển thị thông báo lỗi nếu không tìm thấy chi tiết đơn hàng
+                    // showOrderDetails(order);
+                });
+            });
+        });
+        }
+
+        // Show order details in modal
+        function showOrderDetails(order) {
+            const orderModal = document.getElementById('orderModal');
+            const orderDetails = document.getElementById('orderDetails');
+            const closeBtn = document.querySelector('.close');
+
+            if (!order) {
+                orderDetails.innerHTML = '<li>Không tìm thấy chi tiết đơn hàng</li>';
+                orderModal.style.display = 'block';
+                return;
+            }
+
+            orderDetails.innerHTML = '';
+            if (order.length > 0) {
+                order.forEach(item => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `<span>${item.productName || 'Tên không xác định'}</span> - Số lượng: ${item.quantity || 0}`;
+                    orderDetails.appendChild(li);
+                });
+            } else {
+                const li = document.createElement('li');
+                li.textContent = 'Không có chi tiết món hàng';
+                orderDetails.appendChild(li);
+            }
+            orderModal.style.display = 'block';
+
+            // Close modal
+            closeBtn.addEventListener('click', () => {
+                orderModal.style.display = 'none';
+            });
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (event) => {
+            const orderModal = document.getElementById('orderModal');
+            if (event.target == orderModal) {
+                orderModal.style.display = 'none';
+            }
+        });
+
+        // Gọi hàm để lấy dữ liệu đơn hàng khi trang được tải
+        fetch_orders();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
